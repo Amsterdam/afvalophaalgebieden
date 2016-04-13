@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3
 MAINTAINER datapunt.ois@amsterdam.nl
 
 ENV PYTHONUNBUFFERED 1
@@ -15,7 +15,7 @@ RUN apt-get update \
 
 WORKDIR /app
 COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 USER datapunt
 COPY afvalophaalgebieden /app/

@@ -3,9 +3,10 @@ database:
   ports:
     - "5405:5432"
   environment:
+    POSTGRES_HOST: localhost
     POSTGRES_PASSWORD: insecure
-    POSTGRES_DB: ophaalgebieden
-    POSTGRES_USER: ophaalgebieden
+    POSTGRES_DB: postgres
+    POSTGRES_USER: postgres
 
 web:
   build: ./web

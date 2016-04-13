@@ -1,5 +1,8 @@
 Flask==0.10.1
 Flask-SQLAlchemy==2.1
 Flask-Testing==0.4.2
+GeoAlchemy2==0.2.5
 pyslack-real==0.6.0
 psycopg2==2.6.1
+pyshp==1.2.3
+Shapely==1.5.15

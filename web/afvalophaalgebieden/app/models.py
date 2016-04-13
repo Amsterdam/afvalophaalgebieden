@@ -3,8 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from geoalchemy2 import Geometry
 from sqlalchemy import Integer, String
 
+from .config import SETTINGS
+
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.update(SETTINGS)
 db = SQLAlchemy(app)
 
 
@@ -17,10 +19,10 @@ class Huisvuil(db.Model):
     tijd_vanaf = db.Column(String(5))
     tijd_tot = db.Column(String(5))
     mutatie = db.Column(String(10))
-    sdid = db.Column(Integer())
+    sdid = db.Column(String(20))
     sdnaam = db.Column(String(40))
     sdcode = db.Column(String(4))
-    geometrie = db.Column(Geometry('MULTIPOLYGON'), srid=28992)
+    geometrie = db.Column(Geometry('POLYGON', srid=28992))
 
     def __repr__(self):
         return '<Huisvuil %r>' % self.type
@@ -41,29 +43,29 @@ class Grofvuil(db.Model):
     tijd_tot = db.Column(String(5))
     type = db.Column(String(10))
     mutatie = db.Column(String(10))
-    sdid = db.Column(Integer())
+    sdid = db.Column(String(20))
     sdnaam = db.Column(String(40))
     sdcode = db.Column(String(4))
-    geometrie = db.Column(Geometry('MULTIPOLYGON'), srid=28992)
+    geometrie = db.Column(Geometry('POLYGON', srid=28992))
 
     def __repr__(self):
-        return '<Grofvuil %r>' % self.type
+        return '<Grofvuil %r>' % self.naam
 
     def __str__(self):
-        return '<Grofvuil %r>' % self.type
+        return '<Grofvuil %r>' % self.naam
 
 
-class KCA(db.Model):
+class KleinChemisch(db.Model):
     id = db.Column(Integer, primary_key=True)
     type = db.Column(String(254))
     tijd_van = db.Column(String(254))
     tijd_tot = db.Column(String(254))
     dag = db.Column(String(254))
     mutatie = db.Column(String(10))
-    sdid = db.Column(Integer())
+    sdid = db.Column(String(20))
     sdnaam = db.Column(String(40))
     sdcode = db.Column(String(4))
-    geometrie = db.Column(Geometry('POINT'), srid=28992)
+    geometrie = db.Column(Geometry('POINT', srid=28992))
 
     def __repr__(self):
         return '<KCA %r>' % self.type
