@@ -1,0 +1,16 @@
+database:
+  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
+  ports:
+    - "5405:5432"
+  environment:
+    POSTGRES_PASSWORD: insecure
+    POSTGRES_DB: ophaalgebieden
+    POSTGRES_USER: ophaalgebieden
+
+web:
+  build: ./web
+  ports:
+    - "8102:8000"
+
+  links:
+    - "database"

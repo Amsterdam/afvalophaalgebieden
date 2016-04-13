@@ -1,0 +1,7 @@
+.idea
+__pycache__
+*.pyc
+reports
+*.iml
+.env
+web/afvalophaalgebieden/shp
