@@ -1,11 +1,13 @@
-import argparse
 import os
 
+from flask_sqlalchemy import SQLAlchemy
 import shapefile
 from shapely.geometry import Polygon
-from shapely.wkb import loads, dumps
+from geoalchemy2.shape import from_shape
 
-from app import models
+from . import app, models
+
+db = SQLAlchemy(app)
 
 
 class ImportBase(object):
@@ -45,7 +47,7 @@ class ImportHuisvuil(ImportBase):
         fields = self.wrap_record(record.record)
 
         polygon = Polygon([tuple(p) for p in record.shape.points])
-        wkt = 'SRID=28992;%s' % loads(dumps(polygon)).wkt
+        wkb_element = from_shape(polygon, srid=28992)
 
         model = models.Huisvuil(
             type=fields['type'].strip(),
@@ -58,7 +60,7 @@ class ImportHuisvuil(ImportBase):
             sdid=fields['sdid'],
             sdnaam=fields['sdnaam'].strip(),
             sdcode=fields['sdcode'].strip(),
-            geometrie=wkt
+            geometrie=wkb_element
         )
         models.db.session.add(model)
         models.db.session.commit()
@@ -88,20 +90,8 @@ jobs = {
     'kca': ImportKleinChemisch()
 }
 
-if __name__ == '__main__':
-    steps = list(jobs.keys())
 
-    parser = argparse.ArgumentParser(description='Import afval ophaalgebieden')
-    parser.add_argument('files', nargs='*',
-                        help='run import (%s. defaults to all)' % ', '.join(steps))
-    args = parser.parse_args()
-
-    if not len(args.files):
-        args.files = steps
-
-    models.db.drop_all()
-    models.db.create_all()
-
-    for file in args.files:
+def run():
+    for file in jobs:
         job = jobs[file]
         job.run()

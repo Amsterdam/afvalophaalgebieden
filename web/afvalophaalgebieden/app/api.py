@@ -1,11 +1,11 @@
-from flask import Flask, request, views, jsonify, abort
-import psycopg2
-import psycopg2.extras
-from sqlalchemy import create_engine
-from sqlalchemy.sql import select, func
+from flask import Flask, views
+from flask_sqlalchemy import SQLAlchemy
+
+from app import config
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.update(config.SETTINGS)
+db = SQLAlchemy(app)
 
 
 class LocatieSearchView(views.View):

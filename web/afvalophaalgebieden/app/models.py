@@ -1,12 +1,9 @@
-from flask import Flask
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from geoalchemy2 import Geometry
 from sqlalchemy import Integer, String
 
-from .config import SETTINGS
-
-app = Flask(__name__)
-app.config.update(SETTINGS)
+app = current_app()
 db = SQLAlchemy(app)
 
 
