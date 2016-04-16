@@ -1,9 +1,9 @@
-from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from geoalchemy2 import Geometry
 from sqlalchemy import Integer, String
 
-app = current_app()
+from app import app
+
 db = SQLAlchemy(app)
 
 
@@ -31,7 +31,7 @@ class Huisvuil(db.Model):
 class Grofvuil(db.Model):
     id = db.Column(Integer, primary_key=True)
     ophaaldag = db.Column(String(129))
-    buurtid = db.Column(Integer())
+    buurtid = db.Column(String(129))
     naam = db.Column(String(40))
     vollcode = db.Column(String(4))
     opmerking = db.Column(String(254))

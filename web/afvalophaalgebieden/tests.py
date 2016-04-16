@@ -1,32 +1,40 @@
 import unittest
 
-from flask import Flask
 from flask.ext.testing import TestCase
 from flask_sqlalchemy import SQLAlchemy
 
 from app import models, config
-from import_job import ImportHuisvuil
+from run_import import ImportHuisvuil, ImportGrofvuil, ImportKleinChemisch
 
 
 class TestImport(TestCase):
     def create_app(self):
-        app = Flask(__name__)
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = config.SETTINGS['SQLALCHEMY_DATABASE_URI_TEST']
+        from app import app
         db = SQLAlchemy(app)
-        models.db = db
+        db.create_all()
 
         return app
 
     def setUp(self):
         models.db.create_all()
 
-    def test_import(self):
+    def test_huisvuil_import(self):
         job = ImportHuisvuil()
         job.run()
-        import ipdb;ipdb.set_trace()
 
         self.assertEqual(models.Huisvuil.query.count(), 149)
+
+    def test_grofvuil_import(self):
+        job = ImportGrofvuil()
+        job.run()
+
+        self.assertEqual(models.Grofvuil.query.count(), 496)
+
+    def test_kca_import(self):
+        job = ImportKleinChemisch()
+        job.run()
+
+        self.assertEqual(models.KleinChemisch.query.count(), 81)
 
     def tearDown(self):
         models.db.session.remove()
