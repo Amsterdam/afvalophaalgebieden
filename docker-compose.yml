@@ -12,6 +12,8 @@ web:
   build: ./web
   ports:
     - "8102:8000"
-
   links:
-    - "database"
+    - database:database
+  environment:
+    DOCKER_PORT: 5432
+    DOCKER_HOST: database
