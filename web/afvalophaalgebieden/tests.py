@@ -14,6 +14,7 @@ class TestImport(TestCase):
         return app
 
     def setUp(self):
+        models.db.drop_all()
         models.db.create_all()
 
     def test_huisvuil_import(self):

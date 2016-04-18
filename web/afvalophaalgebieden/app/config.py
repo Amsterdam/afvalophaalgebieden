@@ -8,8 +8,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'this-really-needs-to-be-changed')
 SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@{}:{}/{}'.format(
     os.getenv('DB_NAME', 'postgres'),
     os.getenv('DB_PASSWORD', 'insecure'),
-    os.getenv('DOCKER_HOST', 'localhost'),
-    os.getenv('DOCKER_PORT', 5405),
+    os.getenv('DB_HOST', 'localhost'),
+    os.getenv('DB_PORT_5432', 5405),
     os.getenv('DB_NAME', 'postgres'),
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -50,24 +50,21 @@ class ImportHuisvuil(ImportBase):
         polygon = Polygon([tuple(p) for p in record.shape.points])
         wkb_element = from_shape(polygon, srid=28992)
 
-        try:
-            model = models.Huisvuil(
-                type=fields['type'].strip(),
-                ophaaldag=fields['ophaaldag'].strip(),
-                aanbiedwij=fields['aanbiedwij'].strip(),
-                opmerking=fields['opmerking'].strip(),
-                tijd_vanaf=fields['tijd_vanaf'].strip(),
-                tijd_tot=fields['tijd_tot'].strip(),
-                mutatie=fields['mutatie'].strip(),
-                sdid=fields['sdid'],
-                sdnaam=fields['sdnaam'].strip(),
-                sdcode=fields['sdcode'].strip(),
-                geometrie=wkb_element
-            )
-            models.db.session.add(model)
-            models.db.session.commit()
-        except (KeyError, AttributeError):
-            import ipdb;ipdb.set_trace()
+        model = models.Huisvuil(
+            type=fields['type'].strip(),
+            ophaaldag=fields['ophaaldag'].strip(),
+            aanbiedwij=fields['aanbiedwij'].strip(),
+            opmerking=fields['opmerking'].strip(),
+            tijd_vanaf=fields['tijd_vanaf'].strip(),
+            tijd_tot=fields['tijd_tot'].strip(),
+            mutatie=fields['mutatie'].strip(),
+            stadsdeel_id=fields['sdid'],
+            stadsdeel_naam=fields['sdnaam'].strip(),
+            stadsdeel_code=fields['sdcode'].strip(),
+            geometrie=wkb_element
+        )
+        models.db.session.add(model)
+        models.db.session.commit()
 
 
 class ImportGrofvuil(ImportBase):
@@ -79,27 +76,24 @@ class ImportGrofvuil(ImportBase):
         polygon = Polygon([tuple(p) for p in record.shape.points])
         wkb_element = from_shape(polygon, srid=28992)
 
-        try:
-            model = models.Grofvuil(
-                ophaaldag=fields['ophaaldag'].strip(),
-                buurtid='%r'.strip() % fields['buurtid'],
-                naam=fields['naam'].strip(),
-                vollcode=fields['vollcode'].strip(),
-                opmerking=fields['opmerking'].strip(),
-                website=fields['website'].strip(),
-                tijd_vanaf=fields['tijd_vanaf'].strip(),
-                tijd_tot=fields['tijd_tot'].strip(),
-                type=fields['type'].strip(),
-                mutatie=fields['mutatie'].strip(),
-                sdid=fields['sdid'],
-                sdnaam=fields['sdnaam'].strip(),
-                sdcode=fields['sdcode'].strip(),
-                geometrie=wkb_element
-            )
-            models.db.session.add(model)
-            models.db.session.commit()
-        except (KeyError, AttributeError):
-            import ipdb;ipdb.set_trace()
+        model = models.Grofvuil(
+            ophaaldag=fields['ophaaldag'].strip(),
+            buurt_id='%r'.strip() % fields['buurtid'],
+            naam=fields['naam'].strip(),
+            vollcode=fields['vollcode'].strip(),
+            opmerking=fields['opmerking'].strip(),
+            website=fields['website'].strip(),
+            tijd_van=fields['tijd_vanaf'].strip(),
+            tijd_tot=fields['tijd_tot'].strip(),
+            type=fields['type'].strip(),
+            mutatie=fields['mutatie'].strip(),
+            stadsdeel_id=fields['sdid'],
+            stadsdeel_naam=fields['sdnaam'].strip(),
+            stadsdeel_code=fields['sdcode'].strip(),
+            geometrie=wkb_element
+        )
+        models.db.session.add(model)
+        models.db.session.commit()
 
 
 class ImportKleinChemisch(ImportBase):
@@ -111,22 +105,19 @@ class ImportKleinChemisch(ImportBase):
         point = Point(record.shape.points[0])
         wkb_element = from_shape(point, srid=28992)
 
-        try:
-            model = models.KleinChemisch(
-                type=fields['type'].strip(),
-                tijd_van=fields['tijd_van'].strip(),
-                tijd_tot=fields['tijd_tot'].strip(),
-                dag=fields['dag'].strip(),
-                mutatie=fields['mutatie'].strip(),
-                sdid=fields['sdid'],
-                sdnaam=fields['sdnaam'].strip(),
-                sdcode=fields['sdcode'].strip(),
-                geometrie=wkb_element
-            )
-            models.db.session.add(model)
-            models.db.session.commit()
-        except (KeyError, AttributeError):
-            import ipdb;ipdb.set_trace()
+        model = models.KleinChemisch(
+            type=fields['type'].strip(),
+            tijd_van=fields['tijd_van'].strip(),
+            tijd_tot=fields['tijd_tot'].strip(),
+            dag=fields['dag'].strip(),
+            mutatie=fields['mutatie'].strip(),
+            stadsdeel_id=fields['sdid'],
+            stadsdeel_naam=fields['sdnaam'].strip(),
+            stadsdeel_code=fields['sdcode'].strip(),
+            geometrie=wkb_element
+        )
+        models.db.session.add(model)
+        models.db.session.commit()
 
 
 if __name__ == '__main__':

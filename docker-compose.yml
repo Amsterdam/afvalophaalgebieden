@@ -1,5 +1,5 @@
 database:
-  build: ./postgres
+  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
   ports:
     - "5405:5432"
   environment:
@@ -11,9 +11,9 @@ database:
 web:
   build: ./web
   ports:
-    - "8102:8000"
+    - "8105:8000"
   links:
     - database:database
   environment:
-    DOCKER_PORT: 5432
-    DOCKER_HOST: database
+    DB_PORT_5432: 5432
+    DB_HOST: database
