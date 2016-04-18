@@ -1,6 +1,3 @@
 #!/bin/bash
 
-TESTING=1
-export TESTING
-
-python tests.py
+TESTING=1 python tests.py
