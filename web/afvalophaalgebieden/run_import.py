@@ -1,4 +1,3 @@
-import argparse
 import os
 
 import shapefile
@@ -131,6 +130,9 @@ class ImportKleinChemisch(ImportBase):
 
 
 if __name__ == '__main__':
+    models.db.drop_all()
+    models.db.create_all()
+
     huisvuil_import = ImportHuisvuil()
     huisvuil_import.run()
 

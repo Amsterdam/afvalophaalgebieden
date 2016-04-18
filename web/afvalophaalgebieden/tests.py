@@ -10,8 +10,6 @@ from run_import import ImportHuisvuil, ImportGrofvuil, ImportKleinChemisch
 class TestImport(TestCase):
     def create_app(self):
         from app import app
-        db = SQLAlchemy(app)
-        db.create_all()
 
         return app
 
