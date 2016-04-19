@@ -36,29 +36,34 @@ class SearchView(views.View):
         })
 
     def execute_query(self, point):
-        features = list()
-        # mapserver thingy: using = 'USING rsid=28992 USING UNIQUE id'
+        features = []
 
         # huisvuil
-        s = select([models.Huisvuil]).where(models.Huisvuil.geometrie.ST_Contains(point))
-        results = db.engine.execute(s).fetchall()
-        print(s, results)
-
-        features += [{'properties': row} for row in results]
+        results = models.Huisvuil.query.filter(models.Huisvuil.geometrie.ST_Contains(point)).all()
+        for row in results:
+            features.append({
+                'properties': {
+                    'type': row.type
+                }
+            })
 
         # grofvuil
-        s = select([models.Grofvuil]).where(models.Grofvuil.geometrie.ST_Contains(point))
-        results = db.engine.execute(s).fetchall()
-        print(s, results)
-
-        features += [{'properties': row} for row in results]
+        results = models.Grofvuil.query.filter(models.Grofvuil.geometrie.ST_Contains(point)).all()
+        for row in results:
+            features.append({
+                'properties': {
+                    'naam': row.naam
+                }
+            })
 
         # kleinchemisch
-        s = select([models.KleinChemisch]).where(models.KleinChemisch.geometrie.ST_DWithin(point, 10))
-        results = db.engine.execute(s).fetchall()
-        print(s, results)
-
-        features += [{'properties': row} for row in results]
+        results = models.KleinChemisch.query.filter(models.KleinChemisch.geometrie.ST_DWithin(point, 10)).all()
+        for row in results:
+            features.append({
+                'properties': {
+                    'type': row.type
+                }
+            })
 
         return features
 

@@ -30,6 +30,7 @@ class GrofvuilFactory(alchemy.SQLAlchemyModelFactory):
 
 class KleinChemischFactory(alchemy.SQLAlchemyModelFactory):
     id = Sequence(lambda n: n)
+    type = fuzzy.FuzzyText()
     geometrie = from_shape(point, srid=28992)
 
     class Meta:
