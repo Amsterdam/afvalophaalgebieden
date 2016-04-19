@@ -1,4 +1,4 @@
-from flask import Flask, request, views, jsonify, abort
+from flask import Flask, request, views, jsonify, abort, Response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select, func, text
 from geoalchemy2.elements import WKTElement
@@ -13,7 +13,6 @@ db = SQLAlchemy(app)
 from . import models
 
 class SearchView(views.View):
-    default_columns = ['id', 'display', 'type', 'uri']
     tables = ['grofvuil', 'huisvuil', 'klein_chemisch']
 
     methods = ['GET']
@@ -68,4 +67,13 @@ class SearchView(views.View):
         return features
 
 
+class HealthView(views.View):
+    methods = ['GET']
+
+    def dispatch_request(self):
+        # TODO add something usefull here
+        return Response('Connectivity OK', content_type='text/plain')
+
+
 app.add_url_rule('/search/', view_func=SearchView.as_view('search'))
+app.add_url_rule('/status/health/', view_func=HealthView.as_view('health'))
