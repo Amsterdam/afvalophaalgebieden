@@ -5,7 +5,7 @@ from shapely.geometry import Polygon, Point
 from app import models
 
 polygon = Polygon([(0, 0), (40, 0), (40, 40), (0, 40), (0, 0)])
-point = Point((40, 40))
+point = Point((30, 30))
 
 
 class HuisvuilFactory(alchemy.SQLAlchemyModelFactory):

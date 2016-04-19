@@ -42,7 +42,16 @@ class SearchView(views.View):
         for row in results:
             features.append({
                 'properties': {
-                    'type': row.type
+                    'type': row.type,
+                    'ophaaldag': row.ophaaldag,
+                    'aanbiedwijk': row.aanbiedwijk,
+                    'opmerking': row.opmerking,
+                    'tijd_vanaf': row.tijd_vanaf,
+                    'tijd_tot': row.tijd_tot,
+                    'mutatie': row.mutatie,
+                    'stadsdeel_id': row.stadsdeel_id,
+                    'stadsdeel_naam': row.stadsdeel_naam,
+                    'stadsdeel_code': row.stadsdeel_code,
                 }
             })
 
@@ -51,7 +60,19 @@ class SearchView(views.View):
         for row in results:
             features.append({
                 'properties': {
-                    'naam': row.naam
+                    'ophaaldag': row.ophaaldag,
+                    'buurt_id': row.buurt_id,
+                    'naam': row.naam,
+                    'vollcode': row.vollcode,
+                    'opmerking': row.opmerking,
+                    'website': row.website,
+                    'tijd_van': row.tijd_van,
+                    'tijd_tot': row.tijd_tot,
+                    'type': row.type,
+                    'mutatie': row.mutatie,
+                    'stadsdeel_id': row.stadsdeel_id,
+                    'stadsdeel_naam': row.stadsdeel_naam,
+                    'stadsdeel_code': row.stadsdeel_code,
                 }
             })
 
@@ -60,7 +81,14 @@ class SearchView(views.View):
         for row in results:
             features.append({
                 'properties': {
-                    'type': row.type
+                    'type': row.type,
+                    'tijd_van': row.tijd_van,
+                    'tijd_tot': row.tijd_tot,
+                    'dag': row.dag,
+                    'mutatie': row.mutatie,
+                    'stadsdeel_id': row.stadsdeel_id,
+                    'stadsdeel_naam': row.stadsdeel_naam,
+                    'stadsdeel_code': row.stadsdeel_code,
                 }
             })
 
