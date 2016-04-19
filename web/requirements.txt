@@ -6,3 +6,4 @@ pyslack-real==0.6.0
 psycopg2==2.6.1
 pyshp==1.2.3
 Shapely==1.5.15
+factory-boy==2.5.2
