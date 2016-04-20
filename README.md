@@ -17,7 +17,7 @@ or
 
 	docker-compose up
 
-The API should now be available on http://localhost:8000/
+The API should now be available on http://localhost:8000/search/
 
 It accepts two GET parameters: x and y. When given, a search will be executed for these RD coordinates and all features
  that match those coordinates will be returned as GeoJSON.

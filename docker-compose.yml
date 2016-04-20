@@ -17,3 +17,4 @@ web:
   environment:
     DB_PORT_5432: 5432
     DB_HOST: database
+    DB_READ_HOST: database
