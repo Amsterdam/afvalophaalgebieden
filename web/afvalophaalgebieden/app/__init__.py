@@ -42,6 +42,7 @@ class SearchView(views.View):
         for row in results:
             features.append({
                 'properties': {
+                    'dataset': 'huisvuil',
                     'type': row.type,
                     'ophaaldag': row.ophaaldag,
                     'aanbiedwijk': row.aanbiedwijk,
@@ -60,6 +61,7 @@ class SearchView(views.View):
         for row in results:
             features.append({
                 'properties': {
+                    'dataset': 'grofvuil',
                     'ophaaldag': row.ophaaldag,
                     'buurt_id': row.buurt_id,
                     'naam': row.naam,
@@ -83,6 +85,7 @@ class SearchView(views.View):
         for row in results:
             features.append({
                 'properties': {
+                    'dataset': 'kca',
                     'type': row.type,
                     'tijd_van': row.tijd_van,
                     'tijd_tot': row.tijd_tot,
@@ -97,13 +100,40 @@ class SearchView(views.View):
         return features
 
 
-class HealthView(views.View):
+class HealthDatabaseView(views.View):
     methods = ['GET']
 
     def dispatch_request(self):
-        # TODO add something usefull here
+        try:
+            connection = db.engine.connect()
+        except:
+            return Response('Database connectivity failed', content_type='text/plain', status_code=500)
+
         return Response('Connectivity OK', content_type='text/plain')
 
 
+class HealthDataView(views.View):
+    methods = ['GET']
+
+    def dispatch_request(self):
+        try:
+            assert models.Huisvuil.query.count() > 10
+        except:
+            return Response('No huisvuil data', content_type='text/plain', status_code=500)
+
+        try:
+            assert models.Grofvuil.query.count() > 10
+        except:
+            return Response('No grofvuil data', content_type='text/plain', status_code=500)
+
+        try:
+            assert models.KleinChemisch.query.count() > 10
+        except:
+            return Response('No KCA data', content_type='text/plain', status_code=500)
+
+        return Response('Import data OK', content_type='text/plain')
+
+
 app.add_url_rule('/search/', view_func=SearchView.as_view('search'))
-app.add_url_rule('/status/health/', view_func=HealthView.as_view('health'))
+app.add_url_rule('/status/health/', view_func=HealthDatabaseView.as_view('health-database'))
+app.add_url_rule('/status/data/', view_func=HealthDataView.as_view('health-data'))

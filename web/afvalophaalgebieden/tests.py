@@ -8,7 +8,7 @@ from app import models, config, factories, common
 from run_import import ImportHuisvuil, ImportGrofvuil, ImportKleinChemisch
 
 
-class TestImport(TestCase):
+class TestImport(object):
     def create_app(self):
         from app import app
 
@@ -41,7 +41,7 @@ class TestImport(TestCase):
         models.db.drop_all()
 
 
-class TestApi(TestCase):
+class TestApi(object):
     huisvuil = None
     grofvuil = None
     kleinchemisch = None
@@ -55,14 +55,24 @@ class TestApi(TestCase):
         models.db.drop_all()
         models.db.create_all()
 
+        # inside query
+        polygon = Polygon([(0, 0), (40, 0), (40, 40), (0, 40), (0, 0)])
+        point = Point((25, 25))
+
+        factories.HuisvuilFactory.create(
+            geometrie=from_shape(polygon, srid=28992)
+        )
+        factories.GrofvuilFactory.create(
+            geometrie=from_shape(polygon, srid=28992)
+        )
+        factories.KleinChemischFactory.create(
+            geometrie=from_shape(point, srid=28992)
+        )
+
+        # outside query
         polygon = Polygon([(50, 50), (100, 0), (100, 100), (0, 100), (50, 50)])
         point = Point((100, 100))
 
-        self.huisvuil = factories.HuisvuilFactory.create()
-        self.grofvuil = factories.GrofvuilFactory.create()
-        self.kleinchemisch = factories.KleinChemischFactory.create()
-
-        # outside query
         factories.HuisvuilFactory.create(
             geometrie=from_shape(polygon, srid=28992)
         )
@@ -95,8 +105,12 @@ class TestHealth(TestCase):
     def setUp(self):
         pass
 
-    def test_no_xy(self):
+    def test_database(self):
         response = self.client.get('/status/health/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_data(self):
+        response = self.client.get('/status/data/')
         self.assertEqual(response.status_code, 200)
 
 
