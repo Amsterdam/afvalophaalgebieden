@@ -77,7 +77,9 @@ class SearchView(views.View):
             })
 
         # kleinchemisch
-        results = models.KleinChemisch.query.filter(models.KleinChemisch.geometrie.ST_DWithin(point, 10)).all()
+        results = models.KleinChemisch.query.filter(
+            models.KleinChemisch.geometrie.ST_DWithin(point, app.config['POINT_DISTANCE_METERS'])
+        ).all()
         for row in results:
             features.append({
                 'properties': {

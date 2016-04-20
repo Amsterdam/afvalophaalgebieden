@@ -1,6 +1,8 @@
 import unittest
 
 from flask.ext.testing import TestCase
+from geoalchemy2.shape import from_shape
+from shapely.geometry import Polygon, Point
 
 from app import models, config, factories, common
 from run_import import ImportHuisvuil, ImportGrofvuil, ImportKleinChemisch
@@ -53,9 +55,23 @@ class TestApi(TestCase):
         models.db.drop_all()
         models.db.create_all()
 
+        polygon = Polygon([(50, 50), (100, 0), (100, 100), (0, 100), (50, 50)])
+        point = Point((100, 100))
+
         self.huisvuil = factories.HuisvuilFactory.create()
         self.grofvuil = factories.GrofvuilFactory.create()
         self.kleinchemisch = factories.KleinChemischFactory.create()
+
+        # outside query
+        factories.HuisvuilFactory.create(
+            geometrie=from_shape(polygon, srid=28992)
+        )
+        factories.GrofvuilFactory.create(
+            geometrie=from_shape(polygon, srid=28992)
+        )
+        factories.KleinChemischFactory.create(
+            geometrie=from_shape(point, srid=28992)
+        )
 
     def test_no_xy(self):
         response = self.client.get('/search/')
@@ -63,7 +79,7 @@ class TestApi(TestCase):
 
     def test_search(self):
         response = self.client.get('/search/?x=%d&y=%d' % (20, 20))
-        self.assertEqual(len(response.json['result']['features']), 2)
+        self.assertEqual(len(response.json['result']['features']), 3)
 
     def tearDown(self):
         models.db.session.remove()

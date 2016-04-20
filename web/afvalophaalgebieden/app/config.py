@@ -13,3 +13,4 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@{}:{}/{}'.format(
     os.getenv('DB_NAME', 'postgres'),
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+POINT_DISTANCE_METERS = 50
