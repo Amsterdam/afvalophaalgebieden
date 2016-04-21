@@ -7,6 +7,13 @@ from app import application
 db = SQLAlchemy(application)
 
 
+def recreate_db():
+    db.drop_all()
+    with db.engine.connect() as c:
+        c.execute("CREATE EXTENSION IF NOT EXISTS postgis")
+    db.create_all()
+
+
 class Huisvuil(db.Model):
     id = db.Column(Integer, primary_key=True)
     type = db.Column(String(254), nullable=True)
