@@ -2,9 +2,9 @@ from flask_sqlalchemy import SQLAlchemy
 from geoalchemy2 import Geometry
 from sqlalchemy import Integer, String
 
-from app import app
+from app import application
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(application)
 
 
 class Huisvuil(db.Model):
@@ -63,12 +63,6 @@ class KleinChemisch(db.Model):
     stadsdeel_naam = db.Column(String(40), nullable=True)
     stadsdeel_code = db.Column(String(4), nullable=True)
     geometrie = db.Column(Geometry('POINT', srid=28992), nullable=True)
-
-    def get_nearest(self, x, y):
-        # find the nearest point to the input coordinates
-        # convert the input coordinates to a WKT point and query for nearest point
-        pt = WKTElement('POINT({0} {1})'.format(x, y), srid=28992)
-        return self.query.order_by(self.geometrie.distance_box(pt)).first()
 
     def __repr__(self):
         return '<Kleinchemischafval %r>' % self.type

@@ -10,9 +10,9 @@ from run_import import ImportHuisvuil, ImportGrofvuil, ImportKleinChemisch
 
 class TestImport(object):
     def create_app(self):
-        from app import app
+        from app import application
 
-        return app
+        return application
 
     def setUp(self):
         models.db.drop_all()
@@ -47,9 +47,9 @@ class TestApi(object):
     kleinchemisch = None
 
     def create_app(self):
-        from app import app, db
+        from app import application, db
 
-        return app
+        return application
 
     def setUp(self):
         models.db.drop_all()
@@ -98,9 +98,9 @@ class TestApi(object):
 
 class TestHealth(TestCase):
     def create_app(self):
-        from app import app, db
+        from app import application, db
 
-        return app
+        return application
 
     def setUp(self):
         pass
