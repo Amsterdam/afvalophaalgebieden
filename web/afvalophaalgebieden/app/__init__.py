@@ -22,9 +22,10 @@ class SearchView(views.View):
 
         if x and y:
             point = WKTElement('POINT({} {})'.format(x, y), srid=28992)
-            return self.create_response(self.execute_query(point))
+            features = self.execute_query(point)
+            return self.create_response(features)
 
-        abort(500)
+        abort(400)
 
     def create_response(self, features):
         return jsonify({
