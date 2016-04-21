@@ -15,8 +15,7 @@ class TestImport(TestCase):
         return application
 
     def setUp(self):
-        models.db.drop_all()
-        models.db.create_all()
+        models.recreate_db()
 
     def test_huisvuil_import(self):
         job = ImportHuisvuil()
@@ -52,8 +51,7 @@ class TestApi(TestCase):
         return application
 
     def setUp(self):
-        models.db.drop_all()
-        models.db.create_all()
+        models.recreate_db()
 
         # inside query
         polygon = Polygon([(0, 0), (40, 0), (40, 40), (0, 40), (0, 0)])

@@ -121,11 +121,7 @@ class ImportKleinChemisch(ImportBase):
 
 
 if __name__ == '__main__':
-    models.db.drop_all()
-    with models.db.engine.connect() as c:
-        c.execute("CREATE EXTENSION IF NOT EXISTS postgis")
-
-    models.db.create_all()
+    models.recreate_db()
 
     huisvuil_import = ImportHuisvuil()
     huisvuil_import.run()
