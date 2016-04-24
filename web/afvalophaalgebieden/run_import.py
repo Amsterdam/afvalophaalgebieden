@@ -120,10 +120,7 @@ class ImportKleinChemisch(ImportBase):
         models.db.session.commit()
 
 
-if __name__ == '__main__':
-    models.db.drop_all()
-    models.db.create_all()
-
+def run_all():
     huisvuil_import = ImportHuisvuil()
     huisvuil_import.run()
 
@@ -132,3 +129,10 @@ if __name__ == '__main__':
 
     kca_import = ImportKleinChemisch()
     kca_import.run()
+
+
+if __name__ == '__main__':
+    models.db.drop_all()
+    models.db.create_all()
+
+    run_all()

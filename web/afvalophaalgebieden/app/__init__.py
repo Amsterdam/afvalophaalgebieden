@@ -1,16 +1,26 @@
+import logging
+
 from flask import Flask, request, views, jsonify, abort, Response
+from flask.ext.cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import select, func, text
 from geoalchemy2.elements import WKTElement
 
 from . import config
 
 app = Flask(__name__)
+log_handler = logging.StreamHandler()
+
+logging.basicConfig(level=logging.INFO)
+
 app.config.from_object(config)
+app.logger.addHandler(log_handler)
+
+CORS(app, resources={r'/search/*': {'origins': config.CORS_ORIGINS}}, methods=['GET', 'OPTIONS'])
 
 db = SQLAlchemy(app)
 
 from . import models
+
 
 class SearchView(views.View):
     tables = ['grofvuil', 'huisvuil', 'klein_chemisch']
@@ -24,7 +34,7 @@ class SearchView(views.View):
             point = WKTElement('POINT({} {})'.format(x, y), srid=28992)
             return self.create_response(self.execute_query(point))
 
-        abort(500)
+        abort(400)
 
     def create_response(self, features):
         return jsonify({
@@ -137,3 +147,10 @@ class HealthDataView(views.View):
 app.add_url_rule('/search/', view_func=SearchView.as_view('search'))
 app.add_url_rule('/status/health/', view_func=HealthDatabaseView.as_view('health-database'))
 app.add_url_rule('/status/data/', view_func=HealthDataView.as_view('health-data'))
+
+
+if __name__ == "__main__":
+    from check_db import check_db
+    check_db()
+
+    app.run(host='0.0.0.0:8000')
