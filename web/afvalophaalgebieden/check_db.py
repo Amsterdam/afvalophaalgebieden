@@ -1,6 +1,6 @@
 from sqlalchemy.exc import ProgrammingError
 
-from app import app
+from app import application
 from app import models
 from run_import import run_all
 

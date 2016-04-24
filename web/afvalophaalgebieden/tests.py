@@ -4,19 +4,18 @@ from flask.ext.testing import TestCase
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon, Point
 
-from app import models, config, factories, common
+from app import models, factories
 from run_import import ImportHuisvuil, ImportGrofvuil, ImportKleinChemisch
 
 
-class TestImport(object):
+class TestImport(TestCase):
     def create_app(self):
-        from app import app
+        from app import application
 
-        return app
+        return application
 
     def setUp(self):
-        models.db.drop_all()
-        models.db.create_all()
+        models.recreate_db()
 
     def test_huisvuil_import(self):
         job = ImportHuisvuil()
@@ -41,19 +40,18 @@ class TestImport(object):
         models.db.drop_all()
 
 
-class TestApi(object):
+class TestApi(TestCase):
     huisvuil = None
     grofvuil = None
     kleinchemisch = None
 
     def create_app(self):
-        from app import app, db
+        from app import application
 
-        return app
+        return application
 
     def setUp(self):
-        models.db.drop_all()
-        models.db.create_all()
+        models.recreate_db()
 
         # inside query
         polygon = Polygon([(0, 0), (40, 0), (40, 40), (0, 40), (0, 0)])
@@ -85,7 +83,7 @@ class TestApi(object):
 
     def test_no_xy(self):
         response = self.client.get('/search/')
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 400)
 
     def test_search(self):
         response = self.client.get('/search/?x=%d&y=%d' % (20, 20))
@@ -98,19 +96,15 @@ class TestApi(object):
 
 class TestHealth(TestCase):
     def create_app(self):
-        from app import app, db
+        from app import application
 
-        return app
+        return application
 
     def setUp(self):
         pass
 
     def test_database(self):
         response = self.client.get('/status/health/')
-        self.assertEqual(response.status_code, 200)
-
-    def test_data(self):
-        response = self.client.get('/status/data/')
         self.assertEqual(response.status_code, 200)
 
 
