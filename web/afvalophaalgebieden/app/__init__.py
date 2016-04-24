@@ -28,11 +28,11 @@ class SearchView(views.View):
     methods = ['GET']
 
     def dispatch_request(self):
-        x, y = request.args.get('x'), request.args.get('y')
-        print(x, y)
+        x, y, rd = request.args.get('x'), request.args.get('y'), request.args.get('rd', True)
+        srid = 28992 if rd else 32651
 
         if x and y:
-            point = WKTElement('POINT({} {})'.format(x, y), srid=28992)
+            point = WKTElement('POINT({} {})'.format(x, y), srid=srid)
             features = self.execute_query(point)
             return self.create_response(features)
 
