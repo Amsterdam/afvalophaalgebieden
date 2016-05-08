@@ -9,6 +9,7 @@ def check_db():
     try:
         models.Huisvuil.query.count()
     except ProgrammingError:
+        models.recreate_db()
         models.db.session.rollback()
         models.db.drop_all()
         models.db.create_all()

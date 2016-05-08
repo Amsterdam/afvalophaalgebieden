@@ -53,7 +53,7 @@ class ImportHuisvuil(ImportBase):
         model = models.Huisvuil(
             type=fields['type'].strip(),
             ophaaldag=fields['ophaaldag'].strip(),
-            aanbiedwijk=fields['aanbiedwij'].strip(),
+            aanbiedwijze=fields['aanbiedwij'].strip(),
             opmerking=fields['opmerking'].strip(),
             tijd_vanaf=fields['tijd_vanaf'].strip(),
             tijd_tot=fields['tijd_tot'].strip(),

@@ -57,7 +57,7 @@ class SearchView(views.View):
                     'dataset': 'huisvuil',
                     'type': row.type,
                     'ophaaldag': row.ophaaldag,
-                    'aanbiedwijk': row.aanbiedwijk,
+                    'aanbiedwijze': row.aanbiedwijze,
                     'opmerking': row.opmerking,
                     'tijd_vanaf': row.tijd_vanaf,
                     'tijd_tot': row.tijd_tot,
