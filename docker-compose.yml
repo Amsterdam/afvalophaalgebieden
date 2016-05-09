@@ -11,7 +11,7 @@ database:
 web:
   build: ./web
   ports:
-    - "8105:8000"
+    - "8095:8000"
   links:
     - database:database
   environment:
