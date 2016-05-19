@@ -10,7 +10,7 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 	&& adduser --system datapunt \
-	&& pip install uwsgi
+	&& pip3 install uwsgi
 
 WORKDIR /app
 COPY requirements.txt /app/

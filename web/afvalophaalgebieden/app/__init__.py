@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, request, views, jsonify, abort, Response
 from flask.ext.cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -5,13 +7,17 @@ from geoalchemy2.elements import WKTElement
 
 from . import config
 
-
 application = Flask(__name__)
-# CORS(application)
+log_handler = logging.StreamHandler()
+
+logging.basicConfig(level=logging.INFO)
+
 application.config.from_object(config)
+application.logger.addHandler(log_handler)
+
+CORS(application, resources={r'/search/*': {'origins': config.CORS_ORIGINS}}, methods=['GET', 'OPTIONS'])
 
 db = SQLAlchemy(application)
-
 
 from . import models        # vreemde locatie, maar moet ná het definieren van application
 
@@ -22,11 +28,11 @@ class SearchView(views.View):
     methods = ['GET']
 
     def dispatch_request(self):
-        x, y = request.args.get('x'), request.args.get('y')
-        print(x, y)
+        x, y, rd = request.args.get('x'), request.args.get('y'), request.args.get('rd', True)
+        srid = 28992 if rd else 32651
 
         if x and y:
-            point = WKTElement('POINT({} {})'.format(x, y), srid=28992)
+            point = WKTElement('POINT({} {})'.format(x, y), srid=srid)
             features = self.execute_query(point)
             return self.create_response(features)
 
@@ -51,7 +57,7 @@ class SearchView(views.View):
                     'dataset': 'huisvuil',
                     'type': row.type,
                     'ophaaldag': row.ophaaldag,
-                    'aanbiedwijk': row.aanbiedwijk,
+                    'aanbiedwijze': row.aanbiedwijze,
                     'opmerking': row.opmerking,
                     'tijd_vanaf': row.tijd_vanaf,
                     'tijd_tot': row.tijd_tot,
@@ -144,3 +150,10 @@ class HealthDataView(views.View):
 application.add_url_rule('/search/', view_func=SearchView.as_view('search'))
 application.add_url_rule('/status/health/', view_func=HealthDatabaseView.as_view('health-database'))
 application.add_url_rule('/status/data/', view_func=HealthDataView.as_view('health-data'))
+
+
+if __name__ == "__main__":
+    from check_db import check_db
+    check_db()
+
+    application.run(host='0.0.0.0:8000')

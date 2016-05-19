@@ -18,7 +18,7 @@ class Huisvuil(db.Model):
     id = db.Column(Integer, primary_key=True)
     type = db.Column(String(254), nullable=True)
     ophaaldag = db.Column(String(254), nullable=True)
-    aanbiedwijk = db.Column(String(254), nullable=True)
+    aanbiedwijze = db.Column(String(254), nullable=True)
     opmerking = db.Column(String(254), nullable=True)
     tijd_vanaf = db.Column(String(5), nullable=True)
     tijd_tot = db.Column(String(5), nullable=True)

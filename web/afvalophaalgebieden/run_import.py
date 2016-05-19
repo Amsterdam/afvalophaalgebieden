@@ -53,7 +53,7 @@ class ImportHuisvuil(ImportBase):
         model = models.Huisvuil(
             type=fields['type'].strip(),
             ophaaldag=fields['ophaaldag'].strip(),
-            aanbiedwijk=fields['aanbiedwij'].strip(),
+            aanbiedwijze=fields['aanbiedwij'].strip(),
             opmerking=fields['opmerking'].strip(),
             tijd_vanaf=fields['tijd_vanaf'].strip(),
             tijd_tot=fields['tijd_tot'].strip(),
@@ -120,9 +120,7 @@ class ImportKleinChemisch(ImportBase):
         models.db.session.commit()
 
 
-if __name__ == '__main__':
-    models.recreate_db()
-
+def run_all():
     huisvuil_import = ImportHuisvuil()
     huisvuil_import.run()
 
@@ -131,3 +129,10 @@ if __name__ == '__main__':
 
     kca_import = ImportKleinChemisch()
     kca_import.run()
+
+
+if __name__ == '__main__':
+    models.db.drop_all()
+    models.db.create_all()
+
+    run_all()

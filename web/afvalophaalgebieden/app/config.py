@@ -14,3 +14,8 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@{}:{}/{}'.format(
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 POINT_DISTANCE_METERS = 50
+CORS_ORIGINS = [
+    '^(https?://)?localhost(:\d+)?$',
+    '^(https?://)?.*\.datalabamsterdam\.nl$',
+    '^(https?://)?.*\.amsterdam\.nl$',
+]
