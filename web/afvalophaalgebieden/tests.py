@@ -89,6 +89,11 @@ class TestApi(TestCase):
         response = self.client.get('/search/?x=%d&y=%d' % (20, 20))
         self.assertEqual(len(response.json['result']['features']), 3)
 
+    def test_cors_header(self):
+        resp = self.client.get('/search/?x=%d&y=%d' % (20, 20), headers={'Origin': 'http://fee-fi-foo.fum'})
+        self.assertTrue('Access-Control-Allow-Origin' in resp.headers)
+        self.assertEquals('*', resp.headers['Access-Control-Allow-Origin'])
+
     def tearDown(self):
         models.db.session.remove()
         models.db.drop_all()
