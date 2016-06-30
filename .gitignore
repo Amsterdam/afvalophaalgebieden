@@ -4,3 +4,4 @@ __pycache__
 reports
 *.iml
 .env
+.jenkins/backups

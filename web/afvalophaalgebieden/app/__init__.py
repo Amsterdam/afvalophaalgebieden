@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 application.config.from_object(config)
 application.logger.addHandler(log_handler)
 
-CORS(application, resources={r'/search/*': {'origins': config.CORS_ORIGINS}}, methods=['GET', 'OPTIONS'])
+CORS(app=application, send_wildcard=True)
 
 db = SQLAlchemy(application)
 
