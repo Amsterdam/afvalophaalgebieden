@@ -23,7 +23,7 @@ node {
             sh "docker-compose up -d"
             sh "sleep 20"
             sh "docker-compose up -d"
-            sh "docker-compose run -u root web bash test.sh || echo "Test Failure""
+            sh "docker-compose run -u root web bash test.sh"
 
             step([$class: "JUnitResultArchiver", testResults: "reports/junit.xml"])
 
