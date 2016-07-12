@@ -45,6 +45,9 @@ class TestApi(TestCase):
     grofvuil = None
     kleinchemisch = None
 
+    # point in centrum amsterdam
+    amsterdam_point = (120658, 486883)
+
     def create_app(self):
         from app import application
 
@@ -52,10 +55,12 @@ class TestApi(TestCase):
 
     def setUp(self):
         models.recreate_db()
-
+        a = self.amsterdam_point
         # inside query
-        polygon = Polygon([(0, 0), (40, 0), (40, 40), (0, 40), (0, 0)])
-        point = Point((25, 25))
+        test_poly = [(0, 0), (40, 0), (40, 40), (0, 40), (0, 0)]
+        amsterdam_polygon = [(a[0] + p[0], a[1] + p[1]) for p in test_poly]
+        polygon = Polygon(amsterdam_polygon)
+        point = Point((a[0] + 25, a[1] + 25))
 
         factories.HuisvuilFactory.create(
             geometrie=from_shape(polygon, srid=28992)
@@ -68,8 +73,10 @@ class TestApi(TestCase):
         )
 
         # outside query
-        polygon = Polygon([(50, 50), (100, 0), (100, 100), (0, 100), (50, 50)])
-        point = Point((100, 100))
+        test_poly = [(50, 50), (100, 0), (100, 100), (0, 100), (50, 50)]
+        amsterdam_polygon = [(a[0] + p[0], a[1] + p[1]) for p in test_poly]
+        polygon = Polygon(amsterdam_polygon)
+        point = Point((a[0] + 100, a[1] + 100))
 
         factories.HuisvuilFactory.create(
             geometrie=from_shape(polygon, srid=28992)
@@ -83,14 +90,27 @@ class TestApi(TestCase):
 
     def test_no_xy(self):
         response = self.client.get('/search/')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
 
     def test_search(self):
-        response = self.client.get('/search/?x=%d&y=%d' % (20, 20))
+        a = self.amsterdam_point
+        response = self.client.get(
+            '/search/?x=%d&y=%d' % (a[0] + 20, a[1] + 20))
+        self.assertEqual(len(response.json['result']['features']), 3)
+
+    def test_search_lon_lat(self):
+        # a = rd + 20
+        lat = 52.36894
+        lon = 4.88326
+        response = self.client.get(
+            '/search/?lat={}&lon={}'.format(lat, lon))
         self.assertEqual(len(response.json['result']['features']), 3)
 
     def test_cors_header(self):
-        resp = self.client.get('/search/?x=%d&y=%d' % (20, 20), headers={'Origin': 'http://fee-fi-foo.fum'})
+        a = self.amsterdam_point
+        resp = self.client.get(
+            '/search/?x=%d&y=%d' % (a[0] + 20, a[1] + 20),
+            headers={'Origin': 'http://fee-fi-foo.fum'})
         self.assertTrue('Access-Control-Allow-Origin' in resp.headers)
         self.assertEquals('*', resp.headers['Access-Control-Allow-Origin'])
 

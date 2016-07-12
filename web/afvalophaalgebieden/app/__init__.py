@@ -1,16 +1,21 @@
 import logging
 
-from flask import Flask, request, views, jsonify, abort, Response
+from flask import Flask, request, views, json, jsonify, abort, Response
 from flask.ext.cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from geoalchemy2.elements import WKTElement
+
+from pyproj import Proj, transform
+
+log = logging.getLogger(__name__)
+
+logging.basicConfig(level=logging.INFO)
 
 from . import config
 
 application = Flask(__name__)
 log_handler = logging.StreamHandler()
 
-logging.basicConfig(level=logging.INFO)
 
 application.config.from_object(config)
 application.logger.addHandler(log_handler)
@@ -19,7 +24,20 @@ CORS(app=application, send_wildcard=True)
 
 db = SQLAlchemy(application)
 
-from . import models        # vreemde locatie, maar moet ná het definieren van application
+# vreemde locatie, maar moet ná het definieren van application
+from . import models
+
+
+@application.errorhandler(400)
+def custom400(error):
+    log.debug(error)
+    response = jsonify({
+        'message': error.description,
+        'example_rd_x_y': "https://api.datapunt.amsterdam.nl/afvalophaalgebieden/search/?x=120737&y=486850",
+        'example_lon_lat': "https://api.datapunt.amsterdam.nl/afvalophaalgebieden/search/?lat=52.368779124226194&lon=4.896084471070842"
+    })
+    response.status_code = 200
+    return response
 
 
 class SearchView(views.View):
@@ -28,15 +46,20 @@ class SearchView(views.View):
     methods = ['GET']
 
     def dispatch_request(self):
-        x, y, rd = request.args.get('x'), request.args.get('y'), request.args.get('rd', True)
-        srid = 28992 if rd else 32651
+        x, y = request.args.get('x'), request.args.get('y')
+
+        if not x and request.args.get('lon'):
+            x, y = request.args.get('lon'), request.args.get('lat'),
+            in_4326 = Proj(init='epsg:4326')
+            out_28992 = Proj(init='epsg:28992')
+            x, y = transform(in_4326, out_28992, x, y)
 
         if x and y:
-            point = WKTElement('POINT({} {})'.format(x, y), srid=srid)
+            point = WKTElement('POINT({} {})'.format(x, y), srid=28992)
             features = self.execute_query(point)
             return self.create_response(features)
 
-        abort(400)
+        abort(400, 'missing x and y (rd) or Long / Lat parameters')
 
     def create_response(self, features):
         return jsonify({
@@ -50,7 +73,8 @@ class SearchView(views.View):
         features = []
 
         # huisvuil
-        results = models.Huisvuil.query.filter(models.Huisvuil.geometrie.ST_Contains(point)).all()
+        results = models.Huisvuil.query.filter(
+            models.Huisvuil.geometrie.ST_Contains(point)).all()
         for row in results:
             features.append({
                 'properties': {
@@ -69,7 +93,8 @@ class SearchView(views.View):
             })
 
         # grofvuil
-        results = models.Grofvuil.query.filter(models.Grofvuil.geometrie.ST_Contains(point)).all()
+        results = models.Grofvuil.query.filter(
+            models.Grofvuil.geometrie.ST_Contains(point)).all()
         for row in results:
             features.append({
                 'properties': {
@@ -92,7 +117,8 @@ class SearchView(views.View):
 
         # kleinchemisch
         results = models.KleinChemisch.query.filter(
-            models.KleinChemisch.geometrie.ST_DWithin(point, application.config['POINT_DISTANCE_METERS'])
+            models.KleinChemisch.geometrie.ST_DWithin(
+                point, application.config['POINT_DISTANCE_METERS'])
         ).all()
         for row in results:
             features.append({
@@ -120,7 +146,9 @@ class HealthDatabaseView(views.View):
             connection = db.engine.connect()
             connection.close()
         except:
-            return Response('Database connectivity failed', content_type='text/plain', status=500)
+            return Response(
+                'Database connectivity failed',
+                content_type='text/plain', status=500)
 
         return Response('Connectivity OK', content_type='text/plain')
 
@@ -132,24 +160,35 @@ class HealthDataView(views.View):
         try:
             assert models.Huisvuil.query.count() > 10
         except:
-            return Response('No huisvuil data', content_type='text/plain', status=500)
+            return Response(
+                'No huisvuil data', content_type='text/plain', status=500)
 
         try:
             assert models.Grofvuil.query.count() > 10
         except:
-            return Response('No grofvuil data', content_type='text/plain', status=500)
+            return Response(
+                'No grofvuil data', content_type='text/plain', status=500)
 
         try:
             assert models.KleinChemisch.query.count() > 10
         except:
-            return Response('No KCA data', content_type='text/plain', status=500)
+            return Response(
+                'No KCA data', content_type='text/plain', status=500)
 
         return Response('Import data OK', content_type='text/plain')
 
 
+application.add_url_rule('/', view_func=SearchView.as_view('/search'))
+
 application.add_url_rule('/search/', view_func=SearchView.as_view('search'))
-application.add_url_rule('/status/health/', view_func=HealthDatabaseView.as_view('health-database'))
-application.add_url_rule('/status/data/', view_func=HealthDataView.as_view('health-data'))
+
+application.add_url_rule(
+    '/status/health/',
+    view_func=HealthDatabaseView.as_view('health-database'))
+
+application.add_url_rule(
+    '/status/data/',
+    view_func=HealthDataView.as_view('health-data'))
 
 
 if __name__ == "__main__":
