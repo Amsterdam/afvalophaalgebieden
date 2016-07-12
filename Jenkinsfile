@@ -25,8 +25,6 @@ node {
             sh "docker-compose up -d"
             sh "docker-compose run -u root web bash test.sh"
 
-            step([$class: "JUnitResultArchiver", testResults: "reports/junit.xml"])
-
         }
         finally {
             sh "docker-compose stop"
