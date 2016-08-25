@@ -31,11 +31,17 @@ node {
 
     stage 'Test'
     tryStep "test", {
-        sh "docker-compose up -d"
-        sh "docker-compose run -u root web bash test.sh"
-    }, {
-        sh "docker-compose down"
-    }
+            sh "docker-compose build"
+            sh "docker-compose up -d"
+            sh "sleep 20"
+            sh "docker-compose up -d"
+            sh "docker-compose run -u root web bash test.sh"
+
+        }
+        finally {
+            sh "docker-compose stop"
+            sh "docker-compose rm -f"
+        }
 
     stage "Build develop image"
     tryStep "build", {
