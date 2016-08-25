@@ -37,10 +37,8 @@ node {
             sh "docker-compose up -d"
             sh "docker-compose run -u root web bash test.sh"
 
-        }
-        finally {
-            sh "docker-compose stop"
-            sh "docker-compose rm -f"
+        }, {
+            sh "docker-compose down"
         }
 
     stage "Build develop image"
