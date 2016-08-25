@@ -28,12 +28,14 @@ node {
         sh "docker-compose build"
     }
 
-    stage "Test"
-    tryStep "Test", {
-            sh "docker-compose run -u root web bash test.sh"
-       }, {
-            sh "docker-compose down"
-        }
+
+    stage 'Test'
+    tryStep "test", {
+        sh "docker-compose up -d"
+        sh "docker-compose run -u root web bash test.sh"
+    }, {
+        sh "docker-compose down"
+    }
 
     stage "Build develop image"
     tryStep "build", {
