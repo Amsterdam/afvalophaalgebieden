@@ -68,7 +68,7 @@ input "Deploy to Production?"
 
 
 node {
-    stage 'Build production image'
+    stage 'Push production image'
     tryStep "image tagging", {
         def image = docker.image("admin.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${env.BUILD_NUMBER}")
         image.pull()
