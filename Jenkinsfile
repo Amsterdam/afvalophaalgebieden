@@ -41,6 +41,7 @@ stage('Test') {
             def image = docker.build("admin.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${env.BUILD_NUMBER}", "web")
             image.push()
             image.push("develop")
+            image.push("acceptance")
         }
     }
 }
@@ -73,6 +74,7 @@ node {
 
             image.push("master")
             image.push("latest")
+            image.push("production")
         }
     }
 }
