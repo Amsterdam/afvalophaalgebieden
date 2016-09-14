@@ -41,8 +41,6 @@ stage('Test') {
             def image = docker.build("admin.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${env.BUILD_NUMBER}", "web")
             image.push()
             image.push("develop")
-            image.push("acceptance")
-            image.push("production")
         }
     }
 }
@@ -54,6 +52,7 @@ node {
                     parameters: [
                             [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
                             [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
+                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
         }
     }
@@ -85,6 +84,7 @@ node {
                     parameters: [
                             [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
                             [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
+                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
         }
     }
