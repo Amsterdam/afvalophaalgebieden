@@ -40,7 +40,7 @@ stage('Test') {
         tryStep "build", {
             def image = docker.build("admin.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${env.BUILD_NUMBER}", "web")
             image.push()
-            image.push("develop")
+            image.push("acceptance")
         }
     }
 }
@@ -52,7 +52,6 @@ node {
                     parameters: [
                             [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
                             [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
         }
     }
@@ -61,6 +60,7 @@ node {
 
 stage('Waiting for approval') {
     input "Deploy to Production?"
+    slackSend channel: '#ci-channel', color: 'good', message: 'Afvalophaalgebieden is waiting for Production Release - please confirm'
 }
 
 
@@ -71,7 +71,7 @@ node {
         def image = docker.image("admin.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${env.BUILD_NUMBER}")
         image.pull()
 
-            image.push("master")
+            image.push("production")
             image.push("latest")
         }
     }
@@ -84,7 +84,6 @@ node {
                     parameters: [
                             [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
                             [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
         }
     }
