@@ -25,8 +25,11 @@ tests:
   links:
     - database:database
   environment:
-    DB_PORT_5432: 5432
+    DB_NAME: afvalophaalgebieden
+    DB_USER: afvalophaalgebieden
     DB_HOST: database
+    DB_PASSWORD: insecure
+    DB_PORT_5432: 5432
   command: /app/test.sh
 
 
