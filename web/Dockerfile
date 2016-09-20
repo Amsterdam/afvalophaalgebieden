@@ -18,4 +18,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 USER datapunt
 COPY afvalophaalgebieden /app/
-CMD /app/docker-entrypoint.sh
+CMD ["/app/docker-run.sh"]
