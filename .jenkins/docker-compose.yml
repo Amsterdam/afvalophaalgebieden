@@ -20,6 +20,16 @@ importer:
     bash -c "/app/docker-wait.sh \
             && python run_import.py"
 
+tests:
+  build: ../web
+  links:
+    - database:database
+  environment:
+    DB_PORT_5432: 5432
+    DB_HOST: database
+  command: /app/test.sh
+
+
 db-backup:
   image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
   links:
