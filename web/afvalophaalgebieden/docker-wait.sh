@@ -7,5 +7,5 @@ set -e
 while ! nc -z ${DB_HOST} ${DB_PORT_5432}
 do
 	echo "Waiting for postgres..."
-	sleep 0.1
+	sleep 2
 done
