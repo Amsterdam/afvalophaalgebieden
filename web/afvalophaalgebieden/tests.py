@@ -27,7 +27,7 @@ class TestImport(TestCase):
         job = ImportGrofvuil()
         job.run()
 
-        self.assertEqual(models.Grofvuil.query.count(), 496)
+        self.assertEqual(models.Grofvuil.query.count(), 460)
 
     def test_kca_import(self):
         job = ImportKleinChemisch()
