@@ -4,7 +4,6 @@ import shapefile
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon, Point
 
-from app import application
 from app import models
 
 

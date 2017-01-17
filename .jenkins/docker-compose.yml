@@ -1,52 +1,55 @@
-database:
-  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-  environment:
-    POSTGRES_PASSWORD: insecure
-    POSTGRES_USER: afvalophaalgebieden
+version: '2.1'
+services:
+  database:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    environment:
+      POSTGRES_PASSWORD: insecure
+      POSTGRES_USER: afvalophaalgebieden
 
-importer:
-  build: ../web
-  links:
-    - database:database
-  volumes:
-    - /mnt/data/diva_import:/app/diva
-  environment:
-    DB_NAME: afvalophaalgebieden
-    DB_USER: afvalophaalgebieden
-    DB_HOST: database
-    DB_PASSWORD: insecure
-    DB_PORT_5432: 5432
-  command: >
-    bash -c "/app/docker-wait.sh \
-            && python run_import.py"
+  importer:
+    build: ../web
+    links:
+      - database
+    volumes:
+      - /mnt/data/diva_import:/app/diva
+    environment:
+      DB_NAME: afvalophaalgebieden
+      DB_USER: afvalophaalgebieden
+      DB_HOST: database
+      DB_PASSWORD: insecure
+      DB_PORT_5432: 5432
+    command: >
+      bash -c "/app/docker-wait.sh \
+              && python check_db.py \
+              && python run_import.py"
 
-tests:
-  build: ../web
-  links:
-    - database:database
-  environment:
-    DB_NAME: afvalophaalgebieden
-    DB_USER: afvalophaalgebieden
-    DB_HOST: database
-    DB_PASSWORD: insecure
-    DB_PORT_5432: 5432
-  command: /app/test.sh
+  tests:
+    build: ../web
+    links:
+      - database
+    environment:
+      DB_NAME: afvalophaalgebieden
+      DB_USER: afvalophaalgebieden
+      DB_HOST: database
+      DB_PASSWORD: insecure
+      DB_PORT_5432: 5432
+    command: >
+      bash -c "/app/docker-wait.sh && python /app/tests.py"
 
-
-db-backup:
-  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-  links:
-    - database:db
-  volumes:
-    - ./backups:/tmp/backups
-  command: >
-    bash -c "echo db:5432:afvalophaalgebieden:afvalophaalgebieden:insecure > ~/.pgpass \
-            && chmod 600 ~/.pgpass \
-            && pg_dump --clean \
-                        -Fc \
-                        -t grofvuil* \
-                        -t kleinvuil* \
-                        -t klein_chemisch* \
-                        -U afvalophaalgebieden \
-                        -h db -p 5432 \
-                        afvalophaalgebieden > /tmp/backups/database.dump"
+  db-backup:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    links:
+      - database
+    volumes:
+      - ./backups:/tmp/backups
+    command: >
+      bash -c "echo db:5432:afvalophaalgebieden:afvalophaalgebieden:insecure > ~/.pgpass \
+              && chmod 600 ~/.pgpass \
+              && pg_dump --clean \
+                          -Fc \
+                          -t grofvuil* \
+                          -t kleinvuil* \
+                          -t klein_chemisch* \
+                          -U afvalophaalgebieden \
+                          -h database -p 5432 \
+                          afvalophaalgebieden > /tmp/backups/database.dump"
