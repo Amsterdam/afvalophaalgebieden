@@ -18,4 +18,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 USER datapunt
 COPY afvalophaalgebieden /app/
+COPY .jenkins-import /.jenkins-import/
 CMD ["/app/docker-run.sh"]

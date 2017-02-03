@@ -1,0 +1,17 @@
+database:
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+  environment:
+    POSTGRES_PASSWORD: insecure
+    POSTGRES_USER: afvalophaalgebieden
+
+tests:
+  build: ../web
+  links:
+    - database:database
+  environment:
+    DB_NAME: afvalophaalgebieden
+    DB_USER: afvalophaalgebieden
+    DB_HOST: database
+    DB_PASSWORD: insecure
+    DB_PORT_5432: 5432
+  command: /app/test.sh
