@@ -25,11 +25,11 @@ node {
 
 stage('Test') {
     tryStep "test", {
-            sh "docker-compose -p afvalophaalgebieden -f .jenkins/docker-compose.yml build"
-            sh "docker-compose -p afvalophaalgebieden -f .jenkins/docker-compose.yml run --rm tests"
+            sh "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml build"
+            sh "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml run --rm tests"
 
         }, {
-            sh "docker-compose -p afvalophaalgebieden -f .jenkins/docker-compose.yml down"
+            sh "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml down"
         }
     }
 
