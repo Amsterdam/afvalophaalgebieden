@@ -1,19 +1,25 @@
-database:
-  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-  ports:
-    - "5405:5432"
-  environment:
-    POSTGRES_HOST: localhost
-    POSTGRES_PASSWORD: insecure
-    POSTGRES_DB: postgres
-    POSTGRES_USER: postgres
+version: '2.1'
+services:
+  database:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    ports:
+      - "5405:5432"
+    environment:
+      POSTGRES_HOST: localhost
+      POSTGRES_PASSWORD: insecure
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
 
-web:
-  build: ./web
-  ports:
-    - "8095:8000"
-  links:
-    - database:database
-  environment:
-    DB_PORT_5432: 5432
-    DB_HOST: database
+  web:
+    build: ./web
+    ports:
+      - "8095:8000"
+    links:
+      - database
+    environment:
+      DB_PORT_5432: 5432
+      DB_HOST: database
+command: >
+      bash -c "/app/docker-wait.sh \
+              && /app/docker-migrate.sh \
+              && /app/docker-run.sh"

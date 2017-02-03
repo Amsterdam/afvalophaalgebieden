@@ -1,6 +1,6 @@
 import unittest
 
-from flask.ext.testing import TestCase
+from flask_testing.utils import TestCase
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon, Point
 
@@ -112,7 +112,7 @@ class TestApi(TestCase):
             '/search/?x=%d&y=%d' % (a[0] + 20, a[1] + 20),
             headers={'Origin': 'http://fee-fi-foo.fum'})
         self.assertTrue('Access-Control-Allow-Origin' in resp.headers)
-        self.assertEquals('*', resp.headers['Access-Control-Allow-Origin'])
+        self.assertEqual('*', resp.headers['Access-Control-Allow-Origin'])
 
     def tearDown(self):
         models.db.session.remove()
