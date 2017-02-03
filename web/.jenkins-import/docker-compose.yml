@@ -23,19 +23,6 @@ services:
               && python check_db.py \
               && python run_import.py"
 
-  tests:
-    build: ../web
-    links:
-      - database
-    environment:
-      DB_NAME: afvalophaalgebieden
-      DB_USER: afvalophaalgebieden
-      DB_HOST: database
-      DB_PASSWORD: insecure
-      DB_PORT_5432: 5432
-    command: >
-      bash -c "/app/docker-wait.sh && python /app/tests.py"
-
   db-backup:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
     links:
