@@ -7,11 +7,9 @@ services:
       POSTGRES_USER: afvalophaalgebieden
 
   importer:
-    build: ../web
+    image: build.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${ENVIRONMENT}
     links:
       - database
-    volumes:
-      - /mnt/data/diva_import:/app/diva
     environment:
       DB_NAME: afvalophaalgebieden
       DB_USER: afvalophaalgebieden
