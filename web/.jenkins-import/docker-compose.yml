@@ -33,7 +33,7 @@ services:
               && pg_dump --clean \
                           -Fc \
                           -t grofvuil* \
-                          -t kleinvuil* \
+                          -t huisvuil* \
                           -t klein_chemisch* \
                           -U afvalophaalgebieden \
                           -h database -p 5432 \
