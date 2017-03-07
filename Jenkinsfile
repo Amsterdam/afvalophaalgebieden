@@ -60,6 +60,7 @@ if (BRANCH == "master") {
                         [$class: "StringParameterValue", name: "INVENTORY", value: 'acceptance'],
                         [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
                         [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
+                        [$class: 'StringParameterValue', name: 'BUILD', value: 'acceptance'],
                     ]
             }
         }
@@ -89,6 +90,7 @@ if (BRANCH == "master") {
                         [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
                         [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
                         [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
+                        [$class: 'StringParameterValue', name: 'BUILD', value: 'production'],
                     ]
             }
         }
