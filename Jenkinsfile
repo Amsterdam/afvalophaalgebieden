@@ -2,16 +2,16 @@
 
 def tryStep(String message, Closure block, Closure tearDown = null) {
     try {
-        block();
+        block()
     }
     catch (Throwable t) {
         slackSend message: "${env.JOB_NAME}: ${message} failure ${env.BUILD_URL}", channel: '#ci-channel', color: 'danger'
 
-        throw t;
+        throw t
     }
     finally {
         if (tearDown) {
-            tearDown();
+            tearDown()
         }
     }
 }
@@ -41,31 +41,29 @@ node {
 
 String BRANCH = "${env.BRANCH_NAME}"
 
-if (BRANCH == "master") {
-
-    node {
-        stage('Push acceptance image') {
-            tryStep "image tagging", {
-                def image = docker.image("build.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${env.BUILD_NUMBER}")
-                image.pull()
-                image.push("acceptance")
-            }
+node {
+    stage("Push image") {
+        tryStep "image tagging", {
+            def image = docker.image("build.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${env.BUILD_NUMBER}")
+            image.pull()
+            image.push(BRANCH == "master" ? "acceptance" : BRANCH)
         }
     }
+}
 
+if (BRANCH == "master") {
     node {
         stage("Deploy to ACC") {
             tryStep "deployment", {
                 build job: 'Subtask_Openstack_Playbook',
-                parameters: [
-                    [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
-                    [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
-                ]
+                    parameters: [
+                        [$class: "StringParameterValue", name: "INVENTORY", value: 'acceptance'],
+                        [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
+                        [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
+                    ]
             }
         }
     }
-
 
     stage('Waiting for approval') {
         slackSend channel: '#ci-channel', color: 'warning', message: 'Afvalophaalgebieden is waiting for Production Release - please confirm'
@@ -88,11 +86,11 @@ if (BRANCH == "master") {
             tryStep "deployment", {
                 build job: 'Subtask_Openstack_Playbook',
                     parameters: [
-                            [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
-                            [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
+                        [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
+                        [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
+                        [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
-                }
             }
         }
+    }
 }
