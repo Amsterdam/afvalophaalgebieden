@@ -24,8 +24,8 @@ node {
 
     stage('Test') {
         tryStep "test", {
-            sh "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml build"
-            sh "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml run --rm tests"
+            sh "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml build && " +
+                "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml run --rm tests"
         }, {
             sh "docker-compose -p afvalophaalgebieden -f .jenkins-test/docker-compose.yml down"
         }
@@ -60,7 +60,6 @@ if (BRANCH == "master") {
                 parameters: [
                     [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
                     [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
-                    [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                 ]
             }
         }
@@ -87,12 +86,11 @@ if (BRANCH == "master") {
         stage("Deploy") {
             tryStep "deployment", {
                 build job: 'Subtask_Openstack_Playbook',
-                    parameters: [
-                            [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
-                            [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
-                    ]
-                }
+                parameters: [
+                        [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
+                        [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-afvalophaalgebieden.yml'],
+                ]
             }
         }
+    }
 }
