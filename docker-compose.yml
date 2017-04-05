@@ -19,7 +19,11 @@ services:
     environment:
       DB_PORT_5432: 5432
       DB_HOST: database
-command: >
+      UWSGI_HTTP: ":8000"
+      UWSGI_MODULE: "app"
+      UWSGI_CALLABLE: "application"
+      UWSGI_MASTER: 1
+    command: >
       bash -c "/app/docker-wait.sh \
               && /app/docker-migrate.sh \
               && /app/docker-run.sh"
