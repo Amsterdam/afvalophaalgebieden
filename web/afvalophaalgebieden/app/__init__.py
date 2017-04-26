@@ -33,8 +33,8 @@ def custom400(error):
     log.debug(error)
     response = jsonify({
         'message': error.description,
-        'example_rd_x_y': "https://api.datapunt.amsterdam.nl/afvalophaalgebieden/search/?x=120737&y=486850",
-        'example_lon_lat': "https://api.datapunt.amsterdam.nl/afvalophaalgebieden/search/?lat=52.368779124226194&lon=4.896084471070842"
+        'example_rd_x_y': "https://api.data.amsterdam.nl/afvalophaalgebieden/search/?x=120737&y=486850",
+        'example_lon_lat': "https://api.data.amsterdam.nl/afvalophaalgebieden/search/?lat=52.368779124226194&lon=4.896084471070842"
     })
     response.status_code = 200
     return response
