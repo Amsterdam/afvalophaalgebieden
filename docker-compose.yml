@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.0'
 services:
   database:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
@@ -7,8 +7,8 @@ services:
     environment:
       POSTGRES_HOST: localhost
       POSTGRES_PASSWORD: insecure
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
+      POSTGRES_DB: afvalophaalgebieden
+      POSTGRES_USER: afvalophaalgebieden
 
   web:
     build: ./web
