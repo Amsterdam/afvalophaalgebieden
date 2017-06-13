@@ -1,3 +1,5 @@
+# utf-8
+
 import os
 
 import shapefile
@@ -48,12 +50,18 @@ class ImportHuisvuil(ImportBase):
 
         polygon = Polygon([tuple(p) for p in record.shape.points])
         wkb_element = from_shape(polygon, srid=28992)
+        print(fields['opmerking'].strip())
+        # import issue NULL value fields in shapefile
+        opmerking = None
+        opmerking_raw = fields['opmerking'].strip()
+        if opmerking_raw != b'' and opmerking_raw:
+            opmerking = opmerking_raw
 
         model = models.Huisvuil(
             type=fields['type'].strip(),
             ophaaldag=fields['ophaaldag'].strip(),
             aanbiedwijze=fields['aanbiedwij'].strip(),
-            opmerking=fields['opmerking'].strip(),
+            opmerking=opmerking,
             tijd_vanaf=fields['tijd_vanaf'].strip(),
             tijd_tot=fields['tijd_tot'].strip(),
             mutatie=fields['mutatie'].strip(),

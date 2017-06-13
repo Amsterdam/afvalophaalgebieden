@@ -1,0 +1,8 @@
+.idea
+__pycache__
+*.pyc
+reports
+*.iml
+.env
+.jenkins/backups
+venv/
