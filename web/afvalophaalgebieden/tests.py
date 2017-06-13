@@ -21,7 +21,7 @@ class TestImport(TestCase):
         job = ImportHuisvuil()
         job.run()
 
-        self.assertEqual(models.Huisvuil.query.count(), 147)
+        self.assertEqual(models.Huisvuil.query.count(), 164)
 
     def test_grofvuil_import(self):
         job = ImportGrofvuil()
