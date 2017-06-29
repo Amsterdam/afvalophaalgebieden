@@ -1,10 +1,10 @@
 Adreszoeker afval ophaaldagen
 ==============================
 
-# Usage
+## Usage
 
 Garbage collection days of the city of Amsterdam.
-Best used together with our typeahead bag/brk api for adresses and postal code search:
+Best used together with our typeahead bag/brk api for addresses and postal code search:
 - https://api.data.amsterdam.nl/atlas/typeahead/bag/?q=dam%201 or
 - https://api.data.amsterdam.nl/atlas/typeahead/bag/?q=1012JS%201
 
