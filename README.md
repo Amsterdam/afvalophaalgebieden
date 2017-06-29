@@ -12,7 +12,7 @@ Is important to complete the search api with a house number to get a "label":"Ad
 Then you can get the coordinates from the chosen address URI:
 - https://api.data.amsterdam.nl/atlas/typeahead/bag/bag/verblijfsobject/03630003761571/ 
 
-You can use these coordinates in two get Prameters: x and y to get the garbage collection days:
+You can use these coordinates in two GET parameters: x and y to get the garbage collection days:
 https://api.datapunt.amsterdam.nl/afvalophaalgebieden/search/?x=121394.0&y=487383.0
 
 # Requirements
