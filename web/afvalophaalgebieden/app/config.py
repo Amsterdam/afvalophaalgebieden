@@ -67,7 +67,7 @@ DATABASE_OPTIONS = {
         'USER': os.getenv('DB_USER', 'afvalophaalgebieden'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
         'HOST': get_docker_host(),
-        'PORT': '5401'
+        'PORT': '5405'
     },
     LocationKey.override: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',

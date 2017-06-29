@@ -41,7 +41,7 @@ def custom400(error):
 
 
 class SearchView(views.View):
-    tables = ['grofvuil', 'huisvuil', 'klein_chemisch']
+    tables = ['grofvuil', 'huisvuil']
 
     methods = ['GET']
 
@@ -115,26 +115,6 @@ class SearchView(views.View):
                 }
             })
 
-        # kleinchemisch
-        results = models.KleinChemisch.query.filter(
-            models.KleinChemisch.geometrie.ST_DWithin(
-                point, application.config['POINT_DISTANCE_METERS'])
-        ).all()
-        for row in results:
-            features.append({
-                'properties': {
-                    'dataset': 'kca',
-                    'type': row.type,
-                    'tijd_van': row.tijd_van,
-                    'tijd_tot': row.tijd_tot,
-                    'dag': row.dag,
-                    'mutatie': row.mutatie,
-                    'stadsdeel_id': row.stadsdeel_id,
-                    'stadsdeel_naam': row.stadsdeel_naam,
-                    'stadsdeel_code': row.stadsdeel_code,
-                }
-            })
-
         return features
 
 
@@ -168,12 +148,6 @@ class HealthDataView(views.View):
         except:
             return Response(
                 'No grofvuil data', content_type='text/plain', status=500)
-
-        try:
-            assert models.KleinChemisch.query.count() > 10
-        except:
-            return Response(
-                'No KCA data', content_type='text/plain', status=500)
 
         return Response('Import data OK', content_type='text/plain')
 

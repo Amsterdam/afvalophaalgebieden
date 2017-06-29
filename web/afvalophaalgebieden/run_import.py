@@ -20,7 +20,18 @@ class ImportBase(object):
     def process_record(self, record):
         raise NotImplementedError
 
+    def creatNullFromByteSpaces(self, rec):
+        if isinstance(rec, bytes):
+            field_raw = rec.strip()
+            return None
+        elif isinstance(rec, str):
+            return rec.strip()
+        else:
+            return rec
+
     def wrap_record(self, record):
+        record = [self.creatNullFromByteSpaces(rec) for rec in record]
+        #print(record)
         return dict(zip(self.fieldnames, record))
 
     def run(self):
@@ -50,24 +61,18 @@ class ImportHuisvuil(ImportBase):
 
         polygon = Polygon([tuple(p) for p in record.shape.points])
         wkb_element = from_shape(polygon, srid=28992)
-        print(fields['opmerking'].strip())
-        # import issue NULL value fields in shapefile
-        opmerking = None
-        opmerking_raw = fields['opmerking'].strip()
-        if opmerking_raw != b'' and opmerking_raw:
-            opmerking = opmerking_raw
 
         model = models.Huisvuil(
-            type=fields['type'].strip(),
-            ophaaldag=fields['ophaaldag'].strip(),
-            aanbiedwijze=fields['aanbiedwij'].strip(),
-            opmerking=opmerking,
-            tijd_vanaf=fields['tijd_vanaf'].strip(),
-            tijd_tot=fields['tijd_tot'].strip(),
-            mutatie=fields['mutatie'].strip(),
+            type=fields['type'],
+            ophaaldag=fields['ophaaldag'],
+            aanbiedwijze=fields['aanbiedwij'],
+            opmerking=fields['opmerking'],
+            tijd_vanaf=fields['tijd_vanaf'],
+            tijd_tot=fields['tijd_tot'],
+            mutatie=fields['mutatie'],
             stadsdeel_id=fields['sdid'],
-            stadsdeel_naam=fields['sdnaam'].strip(),
-            stadsdeel_code=fields['sdcode'].strip(),
+            stadsdeel_naam=fields['sdnaam'],
+            stadsdeel_code=fields['sdcode'],
             geometrie=wkb_element
         )
         models.db.session.add(model)
@@ -84,43 +89,19 @@ class ImportGrofvuil(ImportBase):
         wkb_element = from_shape(polygon, srid=28992)
 
         model = models.Grofvuil(
-            ophaaldag=fields['ophaaldag'].strip(),
-            buurt_id='%r'.strip() % fields['buurtid'],
-            naam=fields['naam'].strip(),
-            vollcode=fields['vollcode'].strip(),
-            opmerking=fields['opmerking'].strip(),
-            website=fields['website'].strip(),
-            tijd_van=fields['tijd_vanaf'].strip(),
-            tijd_tot=fields['tijd_tot'].strip(),
-            type=fields['type'].strip(),
-            mutatie=fields['mutatie'].strip(),
+            ophaaldag=fields['ophaaldag'],
+            buurt_id='%r' % fields['buurtid'],
+            naam=fields['naam'],
+            vollcode=fields['vollcode'],
+            opmerking=fields['opmerking'],
+            website=fields['website'],
+            tijd_van=fields['tijd_vanaf'],
+            tijd_tot=fields['tijd_tot'],
+            type=fields['type'],
+            mutatie=fields['mutatie'],
             stadsdeel_id=fields['sdid'],
-            stadsdeel_naam=fields['sdnaam'].strip(),
-            stadsdeel_code=fields['sdcode'].strip(),
-            geometrie=wkb_element
-        )
-        models.db.session.add(model)
-        models.db.session.commit()
-
-
-class ImportKleinChemisch(ImportBase):
-    file = 'kca'
-
-    def process_record(self, record):
-        fields = self.wrap_record(record.record)
-
-        point = Point(record.shape.points[0])
-        wkb_element = from_shape(point, srid=28992)
-
-        model = models.KleinChemisch(
-            type=fields['type'].strip(),
-            tijd_van=fields['tijd_van'].strip(),
-            tijd_tot=fields['tijd_tot'].strip(),
-            dag=fields['dag'].strip(),
-            mutatie=fields['mutatie'].strip(),
-            stadsdeel_id=fields['sdid'],
-            stadsdeel_naam=fields['sdnaam'].strip(),
-            stadsdeel_code=fields['sdcode'].strip(),
+            stadsdeel_naam=fields['sdnaam'],
+            stadsdeel_code=fields['sdcode'],
             geometrie=wkb_element
         )
         models.db.session.add(model)

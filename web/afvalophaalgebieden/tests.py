@@ -5,7 +5,7 @@ from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon, Point
 
 from app import models, factories
-from run_import import ImportHuisvuil, ImportGrofvuil, ImportKleinChemisch
+from run_import import ImportHuisvuil, ImportGrofvuil
 
 
 class TestImport(TestCase):
@@ -21,19 +21,13 @@ class TestImport(TestCase):
         job = ImportHuisvuil()
         job.run()
 
-        self.assertEqual(models.Huisvuil.query.count(), 147)
+        self.assertEqual(models.Huisvuil.query.count(), 164)
 
     def test_grofvuil_import(self):
         job = ImportGrofvuil()
         job.run()
 
         self.assertEqual(models.Grofvuil.query.count(), 460)
-
-    def test_kca_import(self):
-        job = ImportKleinChemisch()
-        job.run()
-
-        self.assertEqual(models.KleinChemisch.query.count(), 81)
 
     def tearDown(self):
         models.db.session.remove()
@@ -43,7 +37,6 @@ class TestImport(TestCase):
 class TestApi(TestCase):
     huisvuil = None
     grofvuil = None
-    kleinchemisch = None
 
     # point in centrum amsterdam
     amsterdam_point = (120658, 486883)
@@ -68,9 +61,6 @@ class TestApi(TestCase):
         factories.GrofvuilFactory.create(
             geometrie=from_shape(polygon, srid=28992)
         )
-        factories.KleinChemischFactory.create(
-            geometrie=from_shape(point, srid=28992)
-        )
 
         # outside query
         test_poly = [(50, 50), (100, 0), (100, 100), (0, 100), (50, 50)]
@@ -84,9 +74,6 @@ class TestApi(TestCase):
         factories.GrofvuilFactory.create(
             geometrie=from_shape(polygon, srid=28992)
         )
-        factories.KleinChemischFactory.create(
-            geometrie=from_shape(point, srid=28992)
-        )
 
     def test_no_xy(self):
         response = self.client.get('/search/')
@@ -96,7 +83,7 @@ class TestApi(TestCase):
         a = self.amsterdam_point
         response = self.client.get(
             '/search/?x=%d&y=%d' % (a[0] + 20, a[1] + 20))
-        self.assertEqual(len(response.json['result']['features']), 3)
+        self.assertEqual(len(response.json['result']['features']), 2)
 
     def test_search_lon_lat(self):
         # a = rd + 20
@@ -104,7 +91,7 @@ class TestApi(TestCase):
         lon = 4.88326
         response = self.client.get(
             '/search/?lat={}&lon={}'.format(lat, lon))
-        self.assertEqual(len(response.json['result']['features']), 3)
+        self.assertEqual(len(response.json['result']['features']), 2)
 
     def test_cors_header(self):
         a = self.amsterdam_point

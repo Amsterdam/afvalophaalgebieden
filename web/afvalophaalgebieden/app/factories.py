@@ -19,12 +19,3 @@ class GrofvuilFactory(alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = models.Grofvuil
         sqlalchemy_session = models.db.session
-
-
-class KleinChemischFactory(alchemy.SQLAlchemyModelFactory):
-    id = Sequence(lambda n: n)
-    type = fuzzy.FuzzyText()
-
-    class Meta:
-        model = models.KleinChemisch
-        sqlalchemy_session = models.db.session
