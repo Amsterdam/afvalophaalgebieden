@@ -115,10 +115,6 @@ def run_all():
     grofvuil_import = ImportGrofvuil()
     grofvuil_import.run()
 
-    kca_import = ImportKleinChemisch()
-    kca_import.run()
-
-
 if __name__ == '__main__':
     models.db.drop_all()
     models.db.create_all()
