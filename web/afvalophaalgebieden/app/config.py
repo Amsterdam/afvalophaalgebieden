@@ -80,8 +80,7 @@ DATABASE_OPTIONS = {
 }
 
 insecure_key = 'insecure'
-SECRET_KEY = os.getenv('SECRET_KEY', insecure_key)
-DEBUG = SECRET_KEY == insecure_key
+DEBUG = False
 TESTING = DEBUG
 
 DB = DATABASE_OPTIONS[get_database_key()]
