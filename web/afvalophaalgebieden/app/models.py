@@ -43,7 +43,7 @@ class Grofvuil(db.Model):
     vollcode = db.Column(String(4), nullable=True)
     opmerking = db.Column(String(254), nullable=True)
     website = db.Column(String(254), nullable=True)
-    tijd_van = db.Column(String(254), nullable=True)
+    tijd_vanaf = db.Column(String(254), nullable=True)
     tijd_tot = db.Column(String(5), nullable=True)
     type = db.Column(String(10), nullable=True)
     mutatie = db.Column(String(10), nullable=True)

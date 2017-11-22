@@ -95,7 +95,7 @@ class ImportGrofvuil(ImportBase):
             vollcode=fields['vollcode'],
             opmerking=fields['opmerking'],
             website=fields['website'],
-            tijd_van=fields['tijd_vanaf'],
+            tijd_vanaf=fields['tijd_vanaf'],
             tijd_tot=fields['tijd_tot'],
             type=fields['type'],
             mutatie=fields['mutatie'],

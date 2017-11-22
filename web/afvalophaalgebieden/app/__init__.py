@@ -1,8 +1,9 @@
 import logging
 
-from flask import Flask, request, views, json, jsonify, abort, Response
+from flask import Flask, request, views, jsonify, abort, Response
 from flask.ext.cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_swagger import swagger
 from geoalchemy2.elements import WKTElement
 
 from pyproj import Proj, transform
@@ -44,6 +45,133 @@ class SearchView(views.View):
     tables = ['grofvuil', 'huisvuil']
 
     methods = ['GET']
+
+    def get(self):
+        """
+        Query for garbage collection days for the specified address (x/y or lat/lon)
+        ---
+        description:
+            - "Returns the garbage collection days for the specified address (x/y or lat/lon)"
+        tags:
+            - "afvalophaalgebieden"
+        produces:
+            - "application/json"
+        parameters:
+            -
+                name: "x"
+                in: "query"
+                description: "x-coordinate of address"
+                required: false
+                type: "string"
+            -
+                name: "y"
+                in: "query"
+                description: "y-coordinate of address"
+                required: false
+                type: "string"
+            -
+                name: "lat"
+                in: "query"
+                description: "latitude of address"
+                required: false
+                type: "string"
+                default: "52.368779124226194"
+            -
+                name: "lon"
+                in: "query"
+                description: "longitude of address"
+                required: false
+                type: "string"
+                default: "4.896084471070842"
+        responses:
+            200:
+                description: "Garbage collection details
+
+                    Possible field values for the following attributes are defined as
+                    follows
+
+                    - aanbiedwijze
+
+                    -- Aanbieden in minicontainer en vuilniszak
+
+                    -- Wegbrengen naar afvalcontainer
+
+                    -- Aanbieden in minicontainer of wegbrengen naar afvalpunt
+
+                    -- Aanbieden in minicontainer
+
+                    -- Aanbieden in minicontainer of wegbrengen naar afvalcontainer
+
+                    -- Aanbieden in vuilniszak
+
+                    -- Wegbrengen naar afvalpunt
+
+                    - ophaaldag
+
+                    free text, consists of comma seperated day names (e.g. 'vrijdag' or
+                    'maandag,dinsdag') or free text (e.g. '2e woensdag van de maand' or
+                    'Geen inzamelingsdagen')
+                    "
+                schema:
+                    type: "object"
+                    properties:
+                        result:
+                            type: "object"
+                            properties:
+                                features:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        properties:
+                                            properties:
+                                                type: "object"
+                                                properties:
+                                                    aanbiedwijze:
+                                                        type: "string"
+                                                    buurt_id:
+                                                        type: "string"
+                                                    dataset:
+                                                        type: "string"
+                                                    mutatatie:
+                                                        type: "string"
+                                                    naam:
+                                                        type: "string"
+                                                    ophaaldag:
+                                                        type: "string"
+                                                    opmerking:
+                                                        type: "string"
+                                                    stadsdeel_code:
+                                                        type: "string"
+                                                    stadsdeel_id:
+                                                        type: "string"
+                                                    stadsdeel_naam:
+                                                        type: "string"
+                                                    tijd_vanaf:
+                                                        type: "string"
+                                                        enum:
+                                                            - "h:mm | hh:mm"
+                                                    tijd_tot:
+                                                        type: "string"
+                                                        enum:
+                                                            - "h:mm | hh:mm"
+                                                    type:
+                                                        type: "string"
+                                                        enum:
+                                                            - "Huisvuil | Huisafval | Grofvuil"
+                                                    vollcode:
+                                                        type: "string"
+                                                    website:
+                                                        type: "string"
+                        type:
+                            type: "string"
+                            enum:
+                                - "FeatureCollection"
+
+            400:
+              description: "missing x and y (rd) or Long / Lat parameters"
+
+        """
+        return self.dispatch_request()
 
     def dispatch_request(self):
         x, y = request.args.get('x'), request.args.get('y')
@@ -105,7 +233,7 @@ class SearchView(views.View):
                     'vollcode': row.vollcode,
                     'opmerking': row.opmerking,
                     'website': row.website,
-                    'tijd_van': row.tijd_van,
+                    'tijd_vanaf': row.tijd_vanaf,
                     'tijd_tot': row.tijd_tot,
                     'type': row.type,
                     'mutatie': row.mutatie,
@@ -121,6 +249,9 @@ class SearchView(views.View):
 class HealthDatabaseView(views.View):
     methods = ['GET']
 
+    def get(self):
+        return self.dispatch_request()
+
     def dispatch_request(self):
         try:
             connection = db.engine.connect()
@@ -135,6 +266,9 @@ class HealthDatabaseView(views.View):
 
 class HealthDataView(views.View):
     methods = ['GET']
+
+    def get(self):
+        return self.dispatch_request()
 
     def dispatch_request(self):
         try:
@@ -152,8 +286,6 @@ class HealthDataView(views.View):
         return Response('Import data OK', content_type='text/plain')
 
 
-application.add_url_rule('/', view_func=SearchView.as_view('/search'))
-
 application.add_url_rule('/search/', view_func=SearchView.as_view('search'))
 
 application.add_url_rule(
@@ -163,6 +295,22 @@ application.add_url_rule(
 application.add_url_rule(
     '/status/data/',
     view_func=HealthDataView.as_view('health-data'))
+
+
+@application.route("/")
+def usage():
+    abort(400, 'missing x and y (rd) or Long / Lat parameters')
+
+
+@application.route("/afvalophaalgebieden/spec.json")
+def spec():
+    try:
+        swag = swagger(application)
+        swag['info']['version'] = "1.0"
+        swag['info']['title'] = "Afvalophaalgebieden API"
+        return jsonify(swag)
+    except Exception as error:
+        return Response('Swagger generation failed: {}'.format(error), content_type='text/plain', status=500)
 
 
 if __name__ == "__main__":
