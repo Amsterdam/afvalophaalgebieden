@@ -1,0 +1,124 @@
+definitions: {}
+info:
+  title: Afvalophaalgebieden API
+  version: '1.0'
+paths:
+  /afvalophaalgebieden/search/:
+    get:
+      description: ''
+      parameters:
+        - description: x-coordinate of address
+          in: query
+          name: x
+          required: false
+          type: string
+        - description: y-coordinate of address
+          in: query
+          name: 'y'
+          required: false
+          type: string
+        - default: '52.368779124226194'
+          description: latitude of address
+          in: query
+          name: lat
+          required: false
+          type: string
+        - default: '4.896084471070842'
+          description: longitude of address
+          in: query
+          name: lon
+          required: false
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: >-
+            Garbage collection details
+
+            Possible field values for the following attributes are defined as
+            follows
+
+            - aanbiedwijze
+
+            -- Aanbieden in minicontainer en vuilniszak
+
+            -- Wegbrengen naar afvalcontainer
+
+            -- Aanbieden in minicontainer of wegbrengen naar afvalpunt
+
+            -- Aanbieden in minicontainer
+
+            -- Aanbieden in minicontainer of wegbrengen naar afvalcontainer
+
+            -- Aanbieden in vuilniszak
+
+            -- Wegbrengen naar afvalpunt
+
+            - ophaaldag
+
+            free text, consists of comma seperated day names (e.g. 'vrijdag' or
+            'maandag,dinsdag') or free text (e.g. '2e woensdag van de maand' or
+            'Geen inzamelingsdagen') 
+          schema:
+            properties:
+              result:
+                properties:
+                  features:
+                    items:
+                      properties:
+                        properties:
+                          properties:
+                            aanbiedwijze:
+                              type: string
+                            buurt_id:
+                              type: string
+                            dataset:
+                              type: string
+                            mutatatie:
+                              type: string
+                            naam:
+                              type: string
+                            ophaaldag:
+                              type: string
+                            opmerking:
+                              type: string
+                            stadsdeel_code:
+                              type: string
+                            stadsdeel_id:
+                              type: string
+                            stadsdeel_naam:
+                              type: string
+                            tijd_tot:
+                              enum:
+                                - 'h:mm | hh:mm'
+                              type: string
+                            tijd_vanaf:
+                              enum:
+                                - 'h:mm | hh:mm'
+                              type: string
+                            type:
+                              enum:
+                                - Huisvuil | Huisafval | Grofvuil
+                              type: string
+                            vollcode:
+                              type: string
+                            website:
+                              type: string
+                          type: object
+                      type: object
+                    type: array
+                type: object
+              type:
+                enum:
+                  - FeatureCollection
+                type: string
+            type: object
+        '400':
+          description: missing x and y (rd) or Long / Lat parameters
+      summary: >-
+        Query for garbage collection days for the specified address (x/y or
+        lat/lon)
+      tags:
+        - afvalophaalgebieden
+swagger: '2.0'
