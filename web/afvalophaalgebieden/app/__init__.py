@@ -49,127 +49,6 @@ class SearchView(views.View):
     def get(self):
         """
         Query for garbage collection days for the specified address (x/y or lat/lon)
-        ---
-        description:
-            - "Returns the garbage collection days for the specified address (x/y or lat/lon)"
-        tags:
-            - "afvalophaalgebieden"
-        produces:
-            - "application/json"
-        parameters:
-            -
-                name: "x"
-                in: "query"
-                description: "x-coordinate of address"
-                required: false
-                type: "string"
-            -
-                name: "y"
-                in: "query"
-                description: "y-coordinate of address"
-                required: false
-                type: "string"
-            -
-                name: "lat"
-                in: "query"
-                description: "latitude of address"
-                required: false
-                type: "string"
-                default: "52.368779124226194"
-            -
-                name: "lon"
-                in: "query"
-                description: "longitude of address"
-                required: false
-                type: "string"
-                default: "4.896084471070842"
-        responses:
-            200:
-                description: "Garbage collection details
-
-                    Possible field values for the following attributes are defined as
-                    follows
-
-                    - aanbiedwijze
-
-                    -- Aanbieden in minicontainer en vuilniszak
-
-                    -- Wegbrengen naar afvalcontainer
-
-                    -- Aanbieden in minicontainer of wegbrengen naar afvalpunt
-
-                    -- Aanbieden in minicontainer
-
-                    -- Aanbieden in minicontainer of wegbrengen naar afvalcontainer
-
-                    -- Aanbieden in vuilniszak
-
-                    -- Wegbrengen naar afvalpunt
-
-                    - ophaaldag
-
-                    free text, consists of comma seperated day names (e.g. 'vrijdag' or
-                    'maandag,dinsdag') or free text (e.g. '2e woensdag van de maand' or
-                    'Geen inzamelingsdagen')
-                    "
-                schema:
-                    type: "object"
-                    properties:
-                        result:
-                            type: "object"
-                            properties:
-                                features:
-                                    type: "array"
-                                    items:
-                                        type: "object"
-                                        properties:
-                                            properties:
-                                                type: "object"
-                                                properties:
-                                                    aanbiedwijze:
-                                                        type: "string"
-                                                    buurt_id:
-                                                        type: "string"
-                                                    dataset:
-                                                        type: "string"
-                                                    mutatatie:
-                                                        type: "string"
-                                                    naam:
-                                                        type: "string"
-                                                    ophaaldag:
-                                                        type: "string"
-                                                    opmerking:
-                                                        type: "string"
-                                                    stadsdeel_code:
-                                                        type: "string"
-                                                    stadsdeel_id:
-                                                        type: "string"
-                                                    stadsdeel_naam:
-                                                        type: "string"
-                                                    tijd_vanaf:
-                                                        type: "string"
-                                                        enum:
-                                                            - "h:mm | hh:mm"
-                                                    tijd_tot:
-                                                        type: "string"
-                                                        enum:
-                                                            - "h:mm | hh:mm"
-                                                    type:
-                                                        type: "string"
-                                                        enum:
-                                                            - "Huisvuil | Huisafval | Grofvuil"
-                                                    vollcode:
-                                                        type: "string"
-                                                    website:
-                                                        type: "string"
-                        type:
-                            type: "string"
-                            enum:
-                                - "FeatureCollection"
-
-            400:
-              description: "missing x and y (rd) or Long / Lat parameters"
-
         """
         return self.dispatch_request()
 
@@ -302,15 +181,11 @@ def usage():
     abort(400, 'missing x and y (rd) or Long / Lat parameters')
 
 
-@application.route("/afvalophaalgebieden/spec.json")
-def spec():
-    try:
-        swag = swagger(application)
-        swag['info']['version'] = "1.0"
-        swag['info']['title'] = "Afvalophaalgebieden API"
-        return jsonify(swag)
-    except Exception as error:
-        return Response('Swagger generation failed: {}'.format(error), content_type='text/plain', status=500)
+@application.route("/openapi.yaml")
+def yaml_spec():
+    with open('./app/afvalophaalgebieden.swagger.yaml', 'r') as yaml:
+        yaml = yaml.read()
+    return Response(yaml, content_type='text/plain')
 
 
 if __name__ == "__main__":
