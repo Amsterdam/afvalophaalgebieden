@@ -19,3 +19,4 @@ USER datapunt
 COPY afvalophaalgebieden /app/
 COPY .jenkins-import /.jenkins-import/
 CMD ["/app/docker-run.sh"]
+
