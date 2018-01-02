@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   database:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     environment:
       POSTGRES_PASSWORD: insecure
       POSTGRES_USER: afvalophaalgebieden
@@ -23,7 +23,7 @@ services:
               && python run_import.py"
 
   db-backup:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     links:
       - database
     volumes:
