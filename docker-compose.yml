@@ -10,8 +10,8 @@ services:
       POSTGRES_DB: afvalophaalgebieden
       POSTGRES_USER: afvalophaalgebieden
 
-  web:
-    build: ./web
+  afvalophaalgebieden:
+    build: .
     ports:
       - "8095:8000"
     links:
@@ -23,7 +23,3 @@ services:
       UWSGI_MODULE: "app"
       UWSGI_CALLABLE: "application"
       UWSGI_MASTER: 1
-    command: >
-      bash -c "/app/docker-wait.sh \
-              && /app/docker-migrate.sh \
-              && /app/docker-run.sh"
