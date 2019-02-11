@@ -9,7 +9,7 @@ services:
       - ./backups:/tmp/backups
 
   importer:
-    image: build.datapunt.amsterdam.nl:5000/datapunt/afvalophaalgebieden:${ENVIRONMENT}
+    image: repo.data.amsterdam.nl/datapunt/afvalophaalgebieden:${ENVIRONMENT}
     links:
       - database
     environment:
