@@ -6,7 +6,7 @@ set -u
 DIR="$(dirname $0)"
 
 dc() {
-	docker-compose -p afvalophaalgebieden -f ${DIR}/docker-compose.yml $*
+	docker-compose -p afvalophaalgebieden${ENVIRONMENT}  -f ${DIR}/docker-compose.yml $*
 }
 
 trap 'dc down; dc kill ; dc rm -f' EXIT
