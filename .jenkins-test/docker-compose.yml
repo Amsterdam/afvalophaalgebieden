@@ -11,6 +11,9 @@ services:
     links:
       - database
     environment:
+      http_proxy:
+      https_proxy:
+      no_proxy:
       DB_NAME: afvalophaalgebieden
       DB_USER: afvalophaalgebieden
       DB_HOST: database
