@@ -12,11 +12,11 @@ Werkzeug==0.11.8
 factory-boy==2.5.2
 fake-factory==0.5.7
 itsdangerous==0.24
-psycopg2==2.6.1
+psycopg2==2.8.2
 pyshp==1.2.3
 pyslack-real==0.6.0
 python-dateutil==2.5.3
 requests==2.20.0
 six==1.10.0
-pyproj==1.9.5.1
+pyproj==2.1.3
 
