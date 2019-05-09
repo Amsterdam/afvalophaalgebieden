@@ -21,13 +21,13 @@ class TestImport(TestCase):
         job = ImportHuisvuil()
         job.run()
 
-        self.assertEqual(models.Huisvuil.query.count(), 164)
+        self.assertEqual(models.Huisvuil.query.count(), 170)
 
     def test_grofvuil_import(self):
         job = ImportGrofvuil()
         job.run()
 
-        self.assertEqual(models.Grofvuil.query.count(), 460)
+        self.assertEqual(models.Grofvuil.query.count(), 121)
 
     def tearDown(self):
         models.db.session.remove()
