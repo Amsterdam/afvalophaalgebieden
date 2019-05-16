@@ -45,4 +45,4 @@ Run `python import.py` to recreate tables and import shape files.
 
 
 ## Testing
-Run `bash test.sh` to run tests.
+Run `python tests.py` to run tests.
