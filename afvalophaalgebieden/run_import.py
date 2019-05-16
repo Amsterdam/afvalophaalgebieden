@@ -45,7 +45,12 @@ class ImportBase(object):
         [self.process_record(rec) for rec in shape_recs]
 
     def resolve_file(self, code):
-        matches = [os.path.join(self.path, f) for f in os.listdir(self.path) if code in f.lower()]
+        """
+        Resolves to most recent path containing code.
+        :param code: filename code, e.g.: "huisvuil"
+        :return: path to .shp file
+        """
+        matches = [os.path.join(self.path, f) for f in os.listdir(self.path) if code in f.lower() and '.shp' in f]
         if not matches:
             raise ValueError("Could not find file for %s in %s" % (code, self.path))
         matches_with_mtime = [(os.path.getmtime(f), f) for f in matches]

@@ -1,11 +1,31 @@
 import unittest
 
+import os
 from flask_testing.utils import TestCase
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon, Point
+from pyfakefs import fake_filesystem_unittest
 
 from app import models, factories
-from run_import import ImportHuisvuil, ImportGrofvuil
+from run_import import ImportHuisvuil, ImportGrofvuil, ImportBase
+
+
+class TestFileResolver(fake_filesystem_unittest.TestCase):
+
+    def setUp(self):
+        self.setUpPyfakefs()
+
+    def test_only_uses_shp_files(self):
+        importer = ImportBase()
+        os.makedirs(importer.path)
+        open(os.path.join(importer.path, 'foo_huisvuil_1000.shp'), 'w').close()
+        open(os.path.join(importer.path, 'foo_huisvuil_213142.geojson'), 'w').close()
+
+        path = importer.resolve_file('huisvuil')
+
+        basepath, ext = os.path.splitext(path)
+        self.assertEqual(basepath, 'shp/foo_huisvuil_1000')
+        self.assertEqual(ext, '.shp')
 
 
 class TestImport(TestCase):
