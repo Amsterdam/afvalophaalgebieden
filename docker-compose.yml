@@ -17,9 +17,6 @@ services:
     links:
       - database
     environment:
-      http_proxy:
-      https_proxy:
-      no_proxy:
       DB_PORT_5432: 5432
       DB_HOST: database
       UWSGI_HTTP: ":8000"
