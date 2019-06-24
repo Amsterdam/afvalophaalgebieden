@@ -23,6 +23,16 @@ https://api.datapunt.amsterdam.nl/afvalophaalgebieden/search/?x=121394.0&y=48738
 # Developing
 Use `docker-compose` to start a local database.
 
+The https proxy config is prevent local development right now.
+As a quick fix comment out the following lines in the Dockerfile:
+
+```
+#ARG https_proxy=http://10.240.2.1:8080/
+#ENV https_proxy=$https_proxy
+```
+
+Start the services using:
+
 	docker-compose up -d
 
 The API should now be available on http://DOCKER_HOST:8095/search/
@@ -35,6 +45,4 @@ Run `python import.py` to recreate tables and import shape files.
 
 
 ## Testing
-Run `bash test.sh` to run tests.
-
-Kelvin is awesome!
+Run `python tests.py` to run tests.
