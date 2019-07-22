@@ -106,10 +106,9 @@ class SearchView(views.View):
             features.append({
                 'properties': {
                     'dataset': 'grofvuil',
+                    'ophalen': row.ophalen,
+                    'frequentie': row.frequentie,
                     'ophaaldag': row.ophaaldag,
-                    'buurt_id': row.buurt_id,
-                    'naam': row.naam,
-                    'vollcode': row.vollcode,
                     'opmerking': row.opmerking,
                     'website': row.website,
                     'tijd_vanaf': row.tijd_vanaf,
