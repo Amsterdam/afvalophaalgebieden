@@ -71,13 +71,13 @@ paths:
                           properties:
                             aanbiedwijze:
                               type: string
-                            buurt_id:
-                              type: string
                             dataset:
                               type: string
                             mutatatie:
                               type: string
-                            naam:
+                            ophalen:
+                              type: string
+                            frequentie:
                               type: string
                             ophaaldag:
                               type: string
