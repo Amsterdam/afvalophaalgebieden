@@ -91,11 +91,11 @@ paths:
                               type: string
                             tijd_tot:
                               enum:
-                                - 'h:mm | hh:mm'
+                                - 'h.mm | hh.mm'
                               type: string
                             tijd_vanaf:
                               enum:
-                                - 'h:mm | hh:mm'
+                                - 'h.mm | hh.mm'
                               type: string
                             type:
                               enum:
