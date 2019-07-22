@@ -8,5 +8,8 @@ source docker-wait.sh
 
 python check_db.py
 
-# load dat in database
-python run_import.py
+# download files
+python download_files_data_catalog.py qji2W_HBpWUWyg /data
+
+# load data in database
+python run_import.py /data
