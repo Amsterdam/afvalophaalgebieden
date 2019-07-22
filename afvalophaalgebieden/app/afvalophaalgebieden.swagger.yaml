@@ -38,6 +38,9 @@ paths:
 
             Possible field values for the following attributes are defined as
             follows
+            - ophalen
+
+            -- ja | nee
 
             - aanbiedwijze
 
@@ -76,6 +79,8 @@ paths:
                             mutatatie:
                               type: string
                             ophalen:
+                              enum:
+                                - ja | nee
                               type: string
                             frequentie:
                               type: string
@@ -91,15 +96,15 @@ paths:
                               type: string
                             tijd_tot:
                               enum:
-                                - 'h.mm | hh.mm'
+                                - 'hh.mm'
                               type: string
                             tijd_vanaf:
                               enum:
-                                - 'h.mm | hh.mm'
+                                - 'hh.mm'
                               type: string
                             type:
                               enum:
-                                - Huisvuil | Huisafval | Grofvuil
+                                - Huisvuil | Grofvuil
                               type: string
                             vollcode:
                               type: string
