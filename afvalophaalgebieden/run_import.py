@@ -1,6 +1,7 @@
 # utf-8
 
 import os
+import argparse
 
 import shapefile
 from geoalchemy2.shape import from_shape
@@ -10,12 +11,13 @@ from app import models
 
 
 class ImportBase(object):
-    path = 'shp'
+    # path = 'shp'
     file = None
     fieldnames = list()
 
-    def __init__(self):
+    def __init__(self, path):
         self.fieldnames = list()
+        self.path = path
 
     def process_record(self, record):
         raise NotImplementedError
@@ -94,11 +96,13 @@ class ImportGrofvuil(ImportBase):
         wkb_element = from_shape(polygon, srid=28992)
 
         model = models.Grofvuil(
+            ophalen=fields['ophalen'],
+            frequentie=fields['frequentie'],
             ophaaldag=fields['ophaaldag'],
-            buurt_id='%r' % fields['buurtid'],
+            opmerking=fields['opmerking'],
+            buurt_id=fields['buurtid'],
             naam=fields['naam'],
             vollcode=fields['vollcode'],
-            opmerking=fields['opmerking'],
             website=fields['website'],
             tijd_vanaf=fields['tijd_vanaf'],
             tijd_tot=fields['tijd_tot'],
@@ -113,12 +117,21 @@ class ImportGrofvuil(ImportBase):
         models.db.session.commit()
 
 
+def parser():
+    parser = argparse.ArgumentParser(description='Run import shapefile to postgres database')
+    parser.add_argument('path', help='Insert folder location where the unzipped shapefiles are, for example: /data')
+    return parser
+
+
 def run_all():
-    huisvuil_import = ImportHuisvuil()
+    args = parser().parse_args()
+
+    huisvuil_import = ImportHuisvuil(args.path)
     huisvuil_import.run()
 
-    grofvuil_import = ImportGrofvuil()
+    grofvuil_import = ImportGrofvuil(args.path)
     grofvuil_import.run()
+
 
 if __name__ == '__main__':
     models.db.drop_all()

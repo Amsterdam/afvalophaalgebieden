@@ -6,3 +6,4 @@ reports
 .env
 .jenkins/backups
 venv/
+data

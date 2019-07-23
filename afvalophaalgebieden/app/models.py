@@ -37,11 +37,13 @@ class Huisvuil(db.Model):
 
 class Grofvuil(db.Model):
     id = db.Column(Integer, primary_key=True)
+    ophalen = db.Column(String(129), nullable=True)
     ophaaldag = db.Column(String(129), nullable=True)
+    frequentie = db.Column(String(129), nullable=True)
+    opmerking = db.Column(String(254), nullable=True)
     buurt_id = db.Column(String(129), nullable=True)
     naam = db.Column(String(40), nullable=True)
     vollcode = db.Column(String(4), nullable=True)
-    opmerking = db.Column(String(254), nullable=True)
     website = db.Column(String(254), nullable=True)
     tijd_vanaf = db.Column(String(254), nullable=True)
     tijd_tot = db.Column(String(5), nullable=True)
@@ -53,7 +55,7 @@ class Grofvuil(db.Model):
     geometrie = db.Column(Geometry('POLYGON', srid=28992), nullable=True)
 
     def __repr__(self):
-        return '<Grofvuil %r>' % self.naam
+        return '<Grofvuil %s>' % self.ophaaldag
 
     def __str__(self):
-        return '<Grofvuil %r>' % self.naam
+        return '<Grofvuil %s>' % self.ophaaldag

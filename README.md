@@ -21,28 +21,21 @@ https://api.datapunt.amsterdam.nl/afvalophaalgebieden/search/?x=121394.0&y=48738
 
 
 # Developing
-Use `docker-compose` to start a local database.
-
-The https proxy config is prevent local development right now.
-As a quick fix comment out the following lines in the Dockerfile:
-
-```
-#ARG https_proxy=http://10.240.2.1:8080/
-#ENV https_proxy=$https_proxy
-```
+Use `docker-compose up -d database` to start a local postgres database on localhost:5405
 
 Start the services using:
 
-	docker-compose up -d
+	docker-compose up afvalophaalgebieden
 
-The API should now be available on http://DOCKER_HOST:8095/search/
+The API should now be available on http://localhost:8095/api/
 
 It accepts two GET parameters: x and y or lat and lon. When given, a search will be executed for these RD  or WGS84 coordinates and all features
  that match those coordinates will be returned as GeoJSON.
 
 ## Run import
-Run `python import.py` to recreate tables and import shape files.
 
+Run `sh docker-import-db.sh` to recreate tables and import shape files locally.
+The used python scripts with necessary arguments can also be found in this file.
 
 ## Testing
 Run `python tests.py` to run tests.

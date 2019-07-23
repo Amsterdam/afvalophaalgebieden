@@ -16,7 +16,7 @@ class TestFileResolver(fake_filesystem_unittest.TestCase):
         self.setUpPyfakefs()
 
     def test_only_uses_shp_files(self):
-        importer = ImportBase()
+        importer = ImportBase('tests')
         os.makedirs(importer.path)
         open(os.path.join(importer.path, 'foo_huisvuil_1000.shp'), 'w').close()
         open(os.path.join(importer.path, 'foo_huisvuil_213142.geojson'), 'w').close()
@@ -24,7 +24,7 @@ class TestFileResolver(fake_filesystem_unittest.TestCase):
         path = importer.resolve_file('huisvuil')
 
         basepath, ext = os.path.splitext(path)
-        self.assertEqual(basepath, 'shp/foo_huisvuil_1000')
+        self.assertEqual(basepath, 'tests/foo_huisvuil_1000')
         self.assertEqual(ext, '.shp')
 
 
@@ -38,13 +38,13 @@ class TestImport(TestCase):
         models.recreate_db()
 
     def test_huisvuil_import(self):
-        job = ImportHuisvuil()
+        job = ImportHuisvuil('tests')
         job.run()
 
         self.assertEqual(models.Huisvuil.query.count(), 170)
 
     def test_grofvuil_import(self):
-        job = ImportGrofvuil()
+        job = ImportGrofvuil('tests')
         job.run()
 
         self.assertEqual(models.Grofvuil.query.count(), 122)

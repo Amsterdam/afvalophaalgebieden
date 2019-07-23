@@ -5,6 +5,9 @@ ENV PYTHONUNBUFFERED 1
 
 EXPOSE 8000
 
+RUN rm -rf /data
+RUN mkdir /data && chown datapunt /data
+
 WORKDIR /app/
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt

@@ -6,7 +6,10 @@ set -x   # log every command.
 
 source docker-wait.sh
 
-python check_db.py
+python check_db.py /data
 
-# load dat in database
-python run_import.py
+# download files
+python download_files_from_dcatd.py qji2W_HBpWUWyg /data
+
+# load data in database
+python run_import.py /data
