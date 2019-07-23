@@ -106,8 +106,6 @@ paths:
                               enum:
                                 - Huisvuil | Grofvuil
                               type: string
-                            vollcode:
-                              type: string
                             website:
                               type: string
                           type: object
