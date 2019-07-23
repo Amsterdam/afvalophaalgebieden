@@ -11,7 +11,7 @@ from app import models
 
 
 class ImportBase(object):
-    path = ''
+    # path = 'shp'
     file = None
     fieldnames = list()
 
@@ -100,6 +100,9 @@ class ImportGrofvuil(ImportBase):
             frequentie=fields['frequentie'],
             ophaaldag=fields['ophaaldag'],
             opmerking=fields['opmerking'],
+            buurt_id=fields['buurtid'],
+            naam=fields['naam'],
+            vollcode=fields['vollcode'],
             website=fields['website'],
             tijd_vanaf=fields['tijd_vanaf'],
             tijd_tot=fields['tijd_tot'],

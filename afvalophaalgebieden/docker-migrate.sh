@@ -2,5 +2,5 @@
 set -u
 set -e
 
-python check_db.py
+python check_db.py /data
 
