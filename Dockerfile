@@ -5,7 +5,8 @@ ENV PYTHONUNBUFFERED 1
 
 EXPOSE 8000
 
-RUN mkdir /data && chown /data datapunt
+RUN rm -rf /data
+RUN mkdir /data && chown datapunt /data
 
 WORKDIR /app/
 COPY requirements.txt /app/
