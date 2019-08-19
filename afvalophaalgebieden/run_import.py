@@ -2,10 +2,9 @@
 
 import os
 import argparse
-
 import shapefile
 from geoalchemy2.shape import from_shape
-from shapely.geometry import Polygon, Point
+from shapely.geometry import Polygon
 
 from app import models
 
@@ -66,7 +65,12 @@ class ImportHuisvuil(ImportBase):
     def process_record(self, record):
         fields = self.wrap_record(record.record)
 
-        polygon = Polygon([tuple(p) for p in record.shape.points])
+        if record.shape.points == []:
+            return
+        else:
+            polygon = Polygon(record.shape.points)
+            # print(r'{}'.format(polygon))
+
         wkb_element = from_shape(polygon, srid=28992)
 
         model = models.Huisvuil(
@@ -92,7 +96,11 @@ class ImportGrofvuil(ImportBase):
     def process_record(self, record):
         fields = self.wrap_record(record.record)
 
-        polygon = Polygon([tuple(p) for p in record.shape.points])
+        if record.shape.points == []:
+            return
+        else:
+            polygon = Polygon([tuple(p) for p in record.shape.points])
+
         wkb_element = from_shape(polygon, srid=28992)
 
         model = models.Grofvuil(
