@@ -1,7 +1,6 @@
 import unittest
 
 import os
-from werkzeug.utils import cached_property
 from flask_testing.utils import TestCase
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon, Point
