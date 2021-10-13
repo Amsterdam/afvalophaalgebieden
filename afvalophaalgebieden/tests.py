@@ -1,6 +1,7 @@
 import unittest
 
 import os
+import os.path
 from flask_testing.utils import TestCase
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon, Point
@@ -10,13 +11,16 @@ from app import models, factories
 from run_import import ImportHuisvuil, ImportGrofvuil, ImportBase
 
 
+TESTS_DIR = os.path.join(os.path.dirname(__file__), 'tests')
+
+
 class TestFileResolver(fake_filesystem_unittest.TestCase):
 
     def setUp(self):
         self.setUpPyfakefs()
 
     def test_only_uses_shp_files(self):
-        importer = ImportBase('tests')
+        importer = ImportBase(TESTS_DIR)
         os.makedirs(importer.path)
         open(os.path.join(importer.path, 'foo_huisvuil_1000.shp'), 'w').close()
         open(os.path.join(importer.path, 'foo_huisvuil_213142.geojson'), 'w').close()
@@ -24,7 +28,7 @@ class TestFileResolver(fake_filesystem_unittest.TestCase):
         path = importer.resolve_file('huisvuil')
 
         basepath, ext = os.path.splitext(path)
-        self.assertEqual(basepath, 'tests/foo_huisvuil_1000')
+        self.assertEqual(basepath, os.path.join(TESTS_DIR, 'foo_huisvuil_1000'))
         self.assertEqual(ext, '.shp')
 
 
@@ -38,13 +42,13 @@ class TestImport(TestCase):
         models.recreate_db()
 
     def test_huisvuil_import(self):
-        job = ImportHuisvuil('tests')
+        job = ImportHuisvuil(TESTS_DIR)
         job.run()
 
         self.assertEqual(models.Huisvuil.query.count(), 170)
 
     def test_grofvuil_import(self):
-        job = ImportGrofvuil('tests')
+        job = ImportGrofvuil(TESTS_DIR)
         job.run()
 
         self.assertEqual(models.Grofvuil.query.count(), 122)
