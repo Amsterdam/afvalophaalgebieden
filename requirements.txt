@@ -69,7 +69,7 @@ six==1.16.0
     # via
     #   flask-cors
     #   python-dateutil
-sqlalchemy==1.4.25
+sqlalchemy==1.4.26
     # via
     #   -r requirements.in
     #   flask-sqlalchemy
