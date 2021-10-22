@@ -14,7 +14,7 @@ click==8.0.1
     # via flask
 factory-boy==3.2.0
     # via -r requirements.in
-faker==9.3.1
+faker==9.5.2
     # via
     #   -r requirements.in
     #   factory-boy
