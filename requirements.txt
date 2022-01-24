@@ -63,7 +63,7 @@ pyyaml==5.4.1
     # via flask-swagger
 requests==2.27.1
     # via -r requirements.in
-shapely==1.7.1
+shapely==1.8.0
     # via -r requirements.in
 six==1.16.0
     # via
