@@ -8,7 +8,7 @@ Shapely == 1.7.1
 psycopg2 == 2.9.1
 pyshp == 2.1.3
 requests == 2.26.0
-pyproj == 3.2.1
+pyproj == 3.3.0
 
 # Testing
 Flask-Testing == 0.8.1
