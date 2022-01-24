@@ -47,7 +47,7 @@ markupsafe==2.0.1
     # via jinja2
 packaging==21.0
     # via geoalchemy2
-psycopg2==2.9.1
+psycopg2==2.9.3
     # via -r requirements.in
 pyfakefs==4.5.4
     # via -r requirements.in
