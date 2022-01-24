@@ -61,7 +61,7 @@ python-dateutil==2.8.2
     # via faker
 pyyaml==5.4.1
     # via flask-swagger
-requests==2.26.0
+requests==2.27.1
     # via -r requirements.in
 shapely==1.7.1
     # via -r requirements.in
