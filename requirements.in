@@ -13,5 +13,5 @@ pyproj == 3.3.0
 # Testing
 Flask-Testing == 0.8.1
 factory-boy == 3.2.1
-Faker == 9.3.1
+Faker == 11.3.0
 pyfakefs == 4.5.4
