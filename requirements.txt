@@ -33,7 +33,7 @@ flask-swagger==0.2.14
     # via -r requirements.in
 flask-testing==0.8.1
     # via -r requirements.in
-geoalchemy2==0.9.4
+geoalchemy2==0.10.2
     # via -r requirements.in
 greenlet==1.1.1
     # via sqlalchemy
