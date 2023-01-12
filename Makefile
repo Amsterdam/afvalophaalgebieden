@@ -9,7 +9,7 @@ sync:
 
 .PHONY: requirements
 requirements: requirements.in
-	pip-compile -v --output-file requirements.txt requirements.in
+	pip-compile -v --generate-hashes --output-file requirements.txt requirements.in
 
 .PHONY: upgrade
 upgrade:
