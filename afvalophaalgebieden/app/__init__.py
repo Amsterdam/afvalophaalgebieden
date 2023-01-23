@@ -3,7 +3,6 @@ import logging
 from flask import Flask, request, views, jsonify, abort, Response
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask_swagger import swagger
 from geoalchemy2.elements import WKTElement
 
 from pyproj import Proj, transform
