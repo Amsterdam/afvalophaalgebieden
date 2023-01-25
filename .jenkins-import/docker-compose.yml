@@ -17,7 +17,6 @@ services:
       DB_USER: afvalophaalgebieden
       DB_HOST: database
       DB_PASSWORD: insecure
-      DB_PORT_5432: 5432
       DATAPUNT_API_URL:
     command: >
       bash -c "./docker-import-db.sh"
