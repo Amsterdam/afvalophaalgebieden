@@ -27,7 +27,7 @@ Start the services using:
 
 	docker-compose up afvalophaalgebieden
 
-The API should now be available on http://localhost:8095/api/
+The API should now be available on http://localhost:8095/
 
 It accepts two GET parameters: x and y or lat and lon. When given, a search will be executed for these RD  or WGS84 coordinates and all features
  that match those coordinates will be returned as GeoJSON.
