@@ -1,7 +1,6 @@
 Flask == 2.2.2
 Flask-Cors == 3.0.10
 Flask-SQLAlchemy == 3.0.2
-flask-swagger == 0.2.14
 GeoAlchemy2 == 0.12.5
 importlib-metadata == 6.0.0
 psycopg2 == 2.9.5
