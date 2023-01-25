@@ -15,6 +15,5 @@ services:
       DB_USER: afvalophaalgebieden
       DB_HOST: database
       DB_PASSWORD: insecure
-      DB_PORT_5432: 5432
     command: >
       bash -c "/app/docker-wait.sh && python /app/tests.py"
